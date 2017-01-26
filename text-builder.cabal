@@ -73,11 +73,11 @@ test-suite tests
     -- general:
     rerebase == 1.*
 
-benchmark benchmark
+benchmark text-benchmark
   type: 
     exitcode-stdio-1.0
   hs-source-dirs:
-    benchmark
+    text-benchmark
   main-is:
     Main.hs
   ghc-options:
