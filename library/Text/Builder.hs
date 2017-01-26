@@ -7,15 +7,33 @@ module Text.Builder
 where
 
 import Text.Builder.Prelude
-import qualified ChunkTree as A
 import qualified Data.Text.Array as B
 import qualified Data.Text.Internal as C
 import qualified Text.Builder.UTF16 as D
 
 
-newtype Builder =
-  Builder (A.ChunkTree (B.Array, Int))
-  deriving (Monoid, Semigroup)
+newtype Action =
+  Action (forall s. B.MArray s -> Int -> ST s ())
+
+data Builder =
+  Builder !Action !Int
+
+instance Monoid Builder where
+  {-# INLINE mempty #-}
+  mempty =
+    Builder (Action (\_ _ -> return ())) 0
+  {-# INLINE mappend #-}
+  mappend (Builder (Action action1) size1) (Builder (Action action2) size2) =
+    Builder action size
+    where
+      action =
+        Action $ \array offset -> do
+          action1 array offset
+          action2 array (offset + size1)
+      size =
+        size1 + size2
+
+instance Semigroup Builder
 
 {-# INLINE char #-}
 char :: Char -> Builder
@@ -28,37 +46,24 @@ charOrd x =
   D.charOrd builder1 builder2 x
   where
     builder1 byte =
-      Builder (A.chunk 1 (array, 1))
+      Builder action 1
       where
-        array =
-          runST $ do
-            array <- B.new 1
-            B.unsafeWrite array 0 byte
-            B.unsafeFreeze array
+        action =
+          Action $ \array offset -> B.unsafeWrite array offset byte
     builder2 byte1 byte2 =
-      Builder (A.chunk 2 (array, 2))
+      Builder action 2
       where
-        array =
-          runST $ do
-            array <- B.new 2
-            B.unsafeWrite array 0 byte1
-            B.unsafeWrite array 1 byte2
-            B.unsafeFreeze array
+        action =
+          Action $ \array offset -> do
+            B.unsafeWrite array offset byte1
+            B.unsafeWrite array (succ offset) byte2
 
 run :: Builder -> Text
-run (Builder chunkTree) =
+run (Builder (Action action) size) =
   C.text array 0 size
   where
-    size =
-      A.length chunkTree
     array =
       runST $ do
         array <- B.new size
-        foldlM (step array) 0 chunkTree
+        action array 0
         B.unsafeFreeze array
-      where
-        step array i (bytes, bytesSize) =
-          B.copyI array i bytes 0 nextI $> nextI
-          where
-            nextI =
-              i + bytesSize

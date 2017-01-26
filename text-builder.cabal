@@ -45,7 +45,6 @@ library
     Text.Builder.UTF16
     Text.Builder.Prelude
   build-depends:
-    chunk-tree == 0.2.*,
     semigroups >= 0.18 && < 0.19,
     bytestring >= 0.10 && < 0.11,
     text >= 1 && < 2,
