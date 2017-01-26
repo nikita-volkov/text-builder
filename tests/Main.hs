@@ -17,5 +17,5 @@ main =
     testProperty "Packing a list of chars is isomorphic to appending a list of char builders (strict)" $
     \chars ->
       A.pack chars ===
-      B.fromCharBuilder (foldMap C.char chars)
+      B.charBuilder (foldMap C.char chars)
   ]

@@ -7,6 +7,9 @@ import qualified ChunkTree as A
 import qualified Text.Builder.Char.Definitions as B
 
 
-fromCharBuilder :: B.Builder -> Text
-fromCharBuilder (B.Builder chunkTree) =
+{-|
+Construct text from a character-specialised builder.
+-}
+charBuilder :: B.Builder -> Text
+charBuilder (B.Builder chunkTree) =
   pack (toList chunkTree)
