@@ -45,6 +45,7 @@ library
     Text.Builder.Action.Definitions
   exposed-modules:
     Text.Builder.Char
+    Text.Builder.Action
     Text.Builder.StrictText
     Text.Builder.UTF16
   build-depends:
