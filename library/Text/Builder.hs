@@ -5,6 +5,8 @@ module Text.Builder
   char,
   text,
   string,
+  utf16Char1,
+  utf16Char2,
 )
 where
 
@@ -24,7 +26,7 @@ instance Monoid Builder where
   {-# INLINE mempty #-}
   mempty =
     Builder (Action (\_ _ -> return ())) 0
-  {-# INLINE mappend #-}
+  {-# INLINABLE mappend #-}
   mappend (Builder (Action action1) size1) (Builder (Action action2) size2) =
     Builder action size
     where
@@ -42,23 +44,28 @@ char :: Char -> Builder
 char x =
   charOrd (ord x)
 
-{-# INLINABLE charOrd #-}
+{-# INLINE charOrd #-}
 charOrd :: Int -> Builder
-charOrd x =
-  D.charOrd builder1 builder2 x
+charOrd =
+  D.charOrd utf16Char1 utf16Char2
+
+{-# INLINABLE utf16Char1 #-}
+utf16Char1 :: Word16 -> Builder
+utf16Char1 byte =
+  Builder action 1
   where
-    builder1 byte =
-      Builder action 1
-      where
-        action =
-          Action $ \array offset -> B.unsafeWrite array offset byte
-    builder2 byte1 byte2 =
-      Builder action 2
-      where
-        action =
-          Action $ \array offset -> do
-            B.unsafeWrite array offset byte1
-            B.unsafeWrite array (succ offset) byte2
+    action =
+      Action $ \array offset -> B.unsafeWrite array offset byte
+
+{-# INLINABLE utf16Char2 #-}
+utf16Char2 :: Word16 -> Word16 -> Builder
+utf16Char2 byte1 byte2 =
+  Builder action 2
+  where
+    action =
+      Action $ \array offset -> do
+        B.unsafeWrite array offset byte1
+        B.unsafeWrite array (succ offset) byte2
 
 {-# INLINABLE text #-}
 text :: Text -> Builder
