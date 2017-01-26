@@ -2,21 +2,15 @@ module Main where
 
 import Prelude
 import Criterion.Main
-import qualified Text.Builder.Char as A
-import qualified Text.Builder.StrictText as B
-import qualified Text.Builder.Action as C
+import qualified Text.Builder as A
 
 
 main =
   defaultMain $
   [
-    benchmark "Small input / charBuilder" smallSample charBuilderSubject
+    benchmark "Small input" smallSample builderSubject
     ,
-    benchmark "Small input / actionBuilder" smallSample actionBuilderSubject
-    ,
-    benchmark "Large input / charBuilder" largeSample charBuilderSubject
-    ,
-    benchmark "Large input / actionBuilder" largeSample actionBuilderSubject
+    benchmark "Large input" largeSample builderSubject
   ]
 
 benchmark :: String -> Sample -> Subject -> Benchmark
@@ -29,13 +23,9 @@ data Subject =
 type Sample =
   Subject -> Text
 
-charBuilderSubject :: Subject
-charBuilderSubject =
-  Subject A.char mappend mempty B.charBuilder
-
-actionBuilderSubject :: Subject
-actionBuilderSubject =
-  Subject C.char mappend mempty B.actionBuilder
+builderSubject :: Subject
+builderSubject =
+  Subject A.char mappend mempty A.run
 
 {-# NOINLINE smallSample #-}
 smallSample :: Sample

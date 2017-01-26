@@ -1,8 +1,12 @@
-module Text.Builder.Action.Definitions
+module Text.Builder
+(
+  Builder,
+  run,
+  char,
+)
 where
 
 import Text.Builder.Prelude
-import qualified ChunkTree as A
 import qualified Data.Text.Array as B
 import qualified Data.Text.Internal as C
 import qualified Text.Builder.UTF16 as D
@@ -15,8 +19,10 @@ data Builder =
   Builder !Action !Int
 
 instance Monoid Builder where
+  {-# INLINE mempty #-}
   mempty =
     Builder (Action (\_ _ -> return ())) 0
+  {-# INLINE mappend #-}
   mappend (Builder (Action action1) size1) (Builder (Action action2) size2) =
     Builder action size
     where
@@ -26,6 +32,8 @@ instance Monoid Builder where
           action2 array (offset + size1)
       size =
         size1 + size2
+
+instance Semigroup Builder
 
 {-# INLINE char #-}
 char :: Char -> Builder
