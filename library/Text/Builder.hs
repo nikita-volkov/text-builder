@@ -74,19 +74,7 @@ text (C.Text array offset length) =
 {-# INLINE string #-}
 string :: String -> Builder
 string =
-  foldl' step mempty
-  where
-    step (Builder action length) theChar =
-      Builder newAction newLength
-      where
-        newAction =
-          Action $ \array offset -> do
-            case action of Action x -> x array offset
-            case charAction of Action x -> x array (offset + length)
-        Builder charAction charLength =
-          char theChar
-        newLength =
-          length + charLength
+  foldMap char
 
 run :: Builder -> Text
 run (Builder (Action action) size) =
