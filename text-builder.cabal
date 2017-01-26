@@ -42,6 +42,7 @@ library
   other-modules:
     Text.Builder.Prelude
     Text.Builder.Char.Definitions
+    Text.Builder.Action.Definitions
   exposed-modules:
     Text.Builder.Char
     Text.Builder.StrictText
