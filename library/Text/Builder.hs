@@ -5,8 +5,12 @@ module Text.Builder
   char,
   text,
   string,
-  utf16Char1,
-  utf16Char2,
+  utf16CodeUnits1,
+  utf16CodeUnits2,
+  utf8CodeUnits1,
+  utf8CodeUnits2,
+  utf8CodeUnits3,
+  utf8CodeUnits4,
 )
 where
 
@@ -42,30 +46,50 @@ instance Semigroup Builder
 {-# INLINE char #-}
 char :: Char -> Builder
 char x =
-  charOrd (ord x)
+  unicodeCodePoint (ord x)
 
-{-# INLINE charOrd #-}
-charOrd :: Int -> Builder
-charOrd =
-  D.charOrd utf16Char1 utf16Char2
+{-# INLINE unicodeCodePoint #-}
+unicodeCodePoint :: Int -> Builder
+unicodeCodePoint =
+  D.unicodeCodePoint utf16CodeUnits1 utf16CodeUnits2
 
-{-# INLINABLE utf16Char1 #-}
-utf16Char1 :: Word16 -> Builder
-utf16Char1 byte =
+{-# INLINABLE utf16CodeUnits1 #-}
+utf16CodeUnits1 :: Word16 -> Builder
+utf16CodeUnits1 byte =
   Builder action 1
   where
     action =
       Action $ \array offset -> B.unsafeWrite array offset byte
 
-{-# INLINABLE utf16Char2 #-}
-utf16Char2 :: Word16 -> Word16 -> Builder
-utf16Char2 byte1 byte2 =
+{-# INLINABLE utf16CodeUnits2 #-}
+utf16CodeUnits2 :: Word16 -> Word16 -> Builder
+utf16CodeUnits2 byte1 byte2 =
   Builder action 2
   where
     action =
       Action $ \array offset -> do
         B.unsafeWrite array offset byte1
         B.unsafeWrite array (succ offset) byte2
+
+{-# INLINE utf8CodeUnits1 #-}
+utf8CodeUnits1 :: Word8 -> Builder
+utf8CodeUnits1 =
+  D.utf8CodeUnits1 utf16CodeUnits1 utf16CodeUnits2
+
+{-# INLINE utf8CodeUnits2 #-}
+utf8CodeUnits2 :: Word8 -> Word8 -> Builder
+utf8CodeUnits2 =
+  D.utf8CodeUnits2 utf16CodeUnits1 utf16CodeUnits2
+
+{-# INLINE utf8CodeUnits3 #-}
+utf8CodeUnits3 :: Word8 -> Word8 -> Word8 -> Builder
+utf8CodeUnits3 =
+  D.utf8CodeUnits3 utf16CodeUnits1 utf16CodeUnits2
+
+{-# INLINE utf8CodeUnits4 #-}
+utf8CodeUnits4 :: Word8 -> Word8 -> Word8 -> Word8 -> Builder
+utf8CodeUnits4 =
+  D.utf8CodeUnits4 utf16CodeUnits1 utf16CodeUnits2
 
 {-# INLINABLE text #-}
 text :: Text -> Builder
