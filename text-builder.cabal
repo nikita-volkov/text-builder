@@ -46,6 +46,7 @@ library
   exposed-modules:
     Text.Builder.Char
     Text.Builder.StrictText
+    Text.Builder.UTF16
   build-depends:
     chunk-tree == 0.2.*,
     semigroups >= 0.18 && < 0.19,

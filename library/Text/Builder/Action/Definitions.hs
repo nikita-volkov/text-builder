@@ -5,6 +5,7 @@ import Text.Builder.Prelude
 import qualified ChunkTree as A
 import qualified Data.Text.Array as B
 import qualified Data.Text.Internal as C
+import qualified Text.Builder.UTF16 as D
 
 
 newtype Action =
@@ -32,25 +33,20 @@ char x =
 
 charOrd :: Int -> Builder
 charOrd x =
-  if x < 0x10000
-    then
-      Builder action1 1
-    else
-      Builder action2 2
+  D.charOrd builder1 builder2 x
   where
-    action1 =
-      Action $ \array offset -> B.unsafeWrite array offset (fromIntegral x)
-    action2 =
-      Action $ \array offset -> do
-        B.unsafeWrite array offset byte1
-        B.unsafeWrite array (succ offset) byte2
+    builder1 byte =
+      Builder action 1
       where
-        m =
-          x - 0x10000
-        byte1 =
-          fromIntegral (shiftR m 10 + 0xD800)
-        byte2 =
-          fromIntegral ((m .&. 0x3FF) + 0xDC00)
+        action =
+          Action $ \array offset -> B.unsafeWrite array offset byte
+    builder2 byte1 byte2 =
+      Builder action 2
+      where
+        action =
+          Action $ \array offset -> do
+            B.unsafeWrite array offset byte1
+            B.unsafeWrite array (succ offset) byte2
 
 run :: Builder -> Text
 run (Builder (Action action) size) =
