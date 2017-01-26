@@ -12,8 +12,8 @@ import qualified Text.Builder.Action.Definitions as C
 Construct text from a character-specialised builder.
 -}
 charBuilder :: B.Builder -> Text
-charBuilder (B.Builder chunkTree) =
-  pack (toList chunkTree)
+charBuilder =
+  B.run
 
 actionBuilder :: C.Builder -> Text
 actionBuilder =
