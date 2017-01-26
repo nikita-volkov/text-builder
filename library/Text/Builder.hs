@@ -3,6 +3,7 @@ module Text.Builder
   Builder,
   run,
   char,
+  text,
 )
 where
 
@@ -57,6 +58,17 @@ charOrd x =
           Action $ \array offset -> do
             B.unsafeWrite array offset byte1
             B.unsafeWrite array (succ offset) byte2
+
+{-# INLINABLE text #-}
+text :: Text -> Builder
+text (C.Text array offset length) =
+  Builder action actualLength
+  where
+    action =
+      Action $ \builderArray builderOffset -> do
+        B.copyI builderArray builderOffset array offset (builderOffset + actualLength)
+    actualLength =
+      length - offset
 
 run :: Builder -> Text
 run (Builder (Action action) size) =
