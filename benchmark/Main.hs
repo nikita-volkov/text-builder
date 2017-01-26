@@ -3,14 +3,26 @@ module Main where
 import Prelude
 import Criterion.Main
 import qualified Text.Builder as A
+import qualified Data.Text.Lazy.Builder as B
+import qualified Data.Text.Lazy as C
+import qualified Data.Text as D
 
 
 main =
   defaultMain $
   [
-    benchmark "Small input" smallSample builderSubject
+    subjectBenchmark "builderSubject" builderSubject
     ,
-    benchmark "Large input" largeSample builderSubject
+    subjectBenchmark "lazyTextBuilderSubject" lazyTextBuilderSubject
+  ]
+
+subjectBenchmark :: String -> Subject -> Benchmark
+subjectBenchmark title subject =
+  bgroup title $
+  [
+    benchmark "Small input" smallSample subject
+    ,
+    benchmark "Large input" largeSample subject
   ]
 
 benchmark :: String -> Sample -> Subject -> Benchmark
@@ -26,6 +38,10 @@ type Sample =
 builderSubject :: Subject
 builderSubject =
   Subject A.char mappend mempty A.run
+
+lazyTextBuilderSubject :: Subject
+lazyTextBuilderSubject =
+  Subject B.singleton mappend mempty (C.toStrict . B.toLazyText)
 
 {-# NOINLINE smallSample #-}
 smallSample :: Sample
