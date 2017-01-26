@@ -36,11 +36,11 @@ type Subject =
 
 builderSubject :: Subject
 builderSubject =
-  A.run . foldMap (A.char . chr)
+  A.run . A.string . map chr
 
 lazyTextBuilderSubject :: Subject
 lazyTextBuilderSubject =
-  C.toStrict . B.toLazyText . foldMap (B.singleton . chr)
+  C.toStrict . B.toLazyText . B.fromString . map chr
 
 plainTextPackingSubject :: Subject
 plainTextPackingSubject =

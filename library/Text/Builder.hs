@@ -4,6 +4,7 @@ module Text.Builder
   run,
   char,
   text,
+  string,
 )
 where
 
@@ -69,6 +70,23 @@ text (C.Text array offset length) =
         B.copyI builderArray builderOffset array offset (builderOffset + actualLength)
     actualLength =
       length - offset
+
+{-# INLINE string #-}
+string :: String -> Builder
+string =
+  foldl' step mempty
+  where
+    step (Builder action length) theChar =
+      Builder newAction newLength
+      where
+        newAction =
+          Action $ \array offset -> do
+            case action of Action x -> x array offset
+            case charAction of Action x -> x array (offset + length)
+        Builder charAction charLength =
+          char theChar
+        newLength =
+          length + charLength
 
 run :: Builder -> Text
 run (Builder (Action action) size) =
