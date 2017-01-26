@@ -27,10 +27,12 @@ instance Monoid Builder where
       size =
         size1 + size2
 
+{-# INLINE char #-}
 char :: Char -> Builder
 char x =
   charOrd (ord x)
 
+{-# INLINABLE charOrd #-}
 charOrd :: Int -> Builder
 charOrd x =
   D.charOrd builder1 builder2 x
