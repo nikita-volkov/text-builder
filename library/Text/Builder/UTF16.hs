@@ -2,7 +2,6 @@ module Text.Builder.UTF16
 where
 
 import Text.Builder.Prelude
-import qualified Data.Text.Array as B
 
 
 {-# INLINE char #-}
