@@ -24,6 +24,8 @@ subjectBenchmark title subject =
   [
     benchmark "Small input" smallInput subject
     ,
+    benchmark "Medium input" mediumInput subject
+    ,
     benchmark "Large input" largeInput subject
   ]
 
@@ -50,6 +52,11 @@ plainTextPackingSubject =
 smallInput :: [Int]
 !smallInput =
   map ord ['a', 'b', 'Ф', '漢', chr 0x11000]
+
+{-# NOINLINE mediumInput #-}
+mediumInput :: [Int]
+!mediumInput =
+  mconcat (replicate 1000 smallInput)
 
 {-# NOINLINE largeInput #-}
 largeInput :: [Int]
