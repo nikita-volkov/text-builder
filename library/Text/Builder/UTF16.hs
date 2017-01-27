@@ -4,39 +4,45 @@ where
 import Text.Builder.Prelude
 
 
+{-|
+A matching function, which chooses the continuation to run.
+-}
+type UTF16View =
+  forall x. (Word16 -> x) -> (Word16 -> Word16 -> x) -> x
+
 {-# INLINE char #-}
-char :: (Word16 -> x) -> (Word16 -> Word16 -> x) -> Char -> x
-char cont1 cont2 x =
-  unicodeCodePoint cont1 cont2 (ord x)
+char :: Char -> UTF16View
+char =
+  unicodeCodePoint . ord
 
 {-# INLINE unicodeCodePoint #-}
-unicodeCodePoint :: (Word16 -> x) -> (Word16 -> Word16 -> x) -> Int -> x
-unicodeCodePoint cont1 cont2 x =
+unicodeCodePoint :: Int -> UTF16View
+unicodeCodePoint x case1 case2 =
   if x < 0x10000
-    then cont1 (fromIntegral x)
-    else cont2 cont2Byte1 cont2Byte2
+    then case1 (fromIntegral x)
+    else case2 case2Unit1 case2Unit2
   where
     m =
       x - 0x10000
-    cont2Byte1 =
+    case2Unit1 =
       fromIntegral (shiftR m 10 + 0xD800)
-    cont2Byte2 =
+    case2Unit2 =
       fromIntegral ((m .&. 0x3FF) + 0xDC00)
 
 {-# INLINE utf8CodeUnits1 #-}
-utf8CodeUnits1 :: (Word16 -> x) -> (Word16 -> Word16 -> x) -> Word8 -> x
-utf8CodeUnits1 cont1 _ x =
-  cont1 (fromIntegral x)
+utf8CodeUnits1 :: Word8 -> UTF16View
+utf8CodeUnits1 x case1 _ =
+  case1 (fromIntegral x)
 
 {-# INLINE utf8CodeUnits2 #-}
-utf8CodeUnits2 :: (Word16 -> x) -> (Word16 -> Word16 -> x) -> Word8 -> Word8 -> x
-utf8CodeUnits2 cont1 _ byte1 byte2 =
-  cont1 (shiftL (fromIntegral byte1 - 0xC0) 6 + fromIntegral byte2 - 0x80)
+utf8CodeUnits2 :: Word8 -> Word8 -> UTF16View
+utf8CodeUnits2 byte1 byte2 case1 _ =
+  case1 (shiftL (fromIntegral byte1 - 0xC0) 6 + fromIntegral byte2 - 0x80)
 
 {-# INLINE utf8CodeUnits3 #-}
-utf8CodeUnits3 :: (Word16 -> x) -> (Word16 -> Word16 -> x) -> Word8 -> Word8 -> Word8 -> x
-utf8CodeUnits3 cont1 cont2 byte1 byte2 byte3 =
-  unicodeCodePoint cont1 cont2 unicode
+utf8CodeUnits3 :: Word8 -> Word8 -> Word8 -> UTF16View
+utf8CodeUnits3 byte1 byte2 byte3 case1 case2 =
+  unicodeCodePoint unicode case1 case2
   where
     unicode =
       shiftL (fromIntegral byte1 - 0xE0) 12 +
@@ -44,9 +50,9 @@ utf8CodeUnits3 cont1 cont2 byte1 byte2 byte3 =
       fromIntegral byte3 - 0x80
 
 {-# INLINE utf8CodeUnits4 #-}
-utf8CodeUnits4 :: (Word16 -> x) -> (Word16 -> Word16 -> x) -> Word8 -> Word8 -> Word8 -> Word8 -> x
-utf8CodeUnits4 cont1 cont2 byte1 byte2 byte3 byte4 =
-  unicodeCodePoint cont1 cont2 unicode
+utf8CodeUnits4 :: Word8 -> Word8 -> Word8 -> Word8 -> UTF16View
+utf8CodeUnits4 byte1 byte2 byte3 byte4 case1 case2 =
+  unicodeCodePoint unicode case1 case2
   where
     unicode =
       shiftL (fromIntegral byte1 - 0xE0) 18 +
