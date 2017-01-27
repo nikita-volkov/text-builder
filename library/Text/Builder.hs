@@ -40,6 +40,17 @@ instance Monoid Builder where
           action2 array (offset + size1)
       size =
         size1 + size2
+  {-# INLINE mconcat #-}
+  mconcat list =
+    Builder action size
+    where
+      action =
+        Action $ \array offset -> foldlM (step array) offset list $> ()
+        where
+          step array offset (Builder (Action action) size) =
+            action array offset $> offset + size
+      size =
+        sum (map (\(Builder _ x) -> x) list)
 
 instance Semigroup Builder
 
