@@ -18,8 +18,13 @@ main =
       A.pack chars ===
       B.run (foldMap B.char chars)
     ,
-    testProperty "Concatting a list of texts is isomorphic to concatting a list of builders" $
+    testProperty "Concatting a list of texts is isomorphic to fold-mapping with builders" $
     \texts ->
       mconcat texts ===
       B.run (foldMap B.text texts)
+    ,
+    testProperty "Concatting a list of texts is isomorphic to concatting a list of builders" $
+    \texts ->
+      mconcat texts ===
+      B.run (mconcat (map B.text texts))
   ]
