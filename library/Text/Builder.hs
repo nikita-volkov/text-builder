@@ -2,6 +2,8 @@ module Text.Builder
 (
   Builder,
   run,
+  length,
+  null,
   char,
   text,
   string,
@@ -14,9 +16,11 @@ module Text.Builder
 )
 where
 
-import Text.Builder.Prelude
+import Text.Builder.Prelude hiding (length, null)
 import qualified Data.Text.Array as B
 import qualified Data.Text.Internal as C
+import qualified Data.Text.Encoding as E
+import qualified Data.Text.Encoding.Error as E
 import qualified Text.Builder.UTF16 as D
 
 
@@ -106,6 +110,14 @@ text (C.Text array offset length) =
 string :: String -> Builder
 string =
   foldMap char
+
+{-# INLINE length #-}
+length :: Builder -> Int
+length (Builder _ x) = x
+
+{-# INLINE null #-}
+null :: Builder -> Bool
+null = (== 0) . length
 
 run :: Builder -> Text
 run (Builder (Action action) size) =
