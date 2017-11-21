@@ -7,6 +7,7 @@ module Text.Builder
   char,
   text,
   string,
+  unicodeCodePoint,
   utf16CodeUnits1,
   utf16CodeUnits2,
   utf8CodeUnits1,
