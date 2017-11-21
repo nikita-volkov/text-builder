@@ -27,4 +27,7 @@ main =
     \texts ->
       mconcat texts ===
       B.run (mconcat (map B.text texts))
+    ,
+    testCase "Integral" $
+    assertEqual "" "123" (B.run (B.integral 123))
   ]

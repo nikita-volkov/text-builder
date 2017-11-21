@@ -14,6 +14,7 @@ module Text.Builder
   utf8CodeUnits2,
   utf8CodeUnits3,
   utf8CodeUnits4,
+  integral,
 )
 where
 
@@ -111,6 +112,26 @@ text (C.Text array offset length) =
 string :: String -> Builder
 string =
   foldMap char
+
+{-# INLINABLE integral #-}
+integral :: Integral a => a -> Builder
+integral =
+  \case
+    0 ->
+      unicodeCodePoint 48
+    x ->
+      bool ((<>) (unicodeCodePoint 45)) id (x >= 0) $
+      loop mempty $
+      abs x
+  where
+    loop builder remainder =
+      case remainder of
+        0 ->
+          builder
+        _ ->
+          case quotRem remainder 10 of
+            (quot, rem) ->
+              loop (unicodeCodePoint (48 + fromIntegral rem) <> builder) quot
 
 {-# INLINE length #-}
 length :: Builder -> Int
