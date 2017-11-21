@@ -14,7 +14,12 @@ module Text.Builder
   utf8CodeUnits2,
   utf8CodeUnits3,
   utf8CodeUnits4,
-  integral,
+  decimal,
+  unsignedDecimal,
+  decimalDigit,
+  hexadecimal,
+  unsignedHexadecimal,
+  hexadecimalDigit,
 )
 where
 
@@ -113,25 +118,59 @@ string :: String -> Builder
 string =
   foldMap char
 
-{-# INLINABLE integral #-}
-integral :: Integral a => a -> Builder
-integral =
-  \case
-    0 ->
-      unicodeCodePoint 48
-    x ->
-      bool ((<>) (unicodeCodePoint 45)) id (x >= 0) $
-      loop mempty $
-      abs x
+{-# INLINABLE decimal #-}
+decimal :: Integral a => a -> Builder
+decimal i =
+  if i >= 0
+    then unsignedDecimal i
+    else unicodeCodePoint 45 <> unsignedDecimal (negate i)
+
+{-# INLINABLE unsignedDecimal #-}
+unsignedDecimal :: Integral a => a -> Builder
+unsignedDecimal =
+  loop mempty
   where
-    loop builder remainder =
-      case remainder of
-        0 ->
-          builder
-        _ ->
-          case quotRem remainder 10 of
-            (quot, rem) ->
-              loop (unicodeCodePoint (48 + fromIntegral rem) <> builder) quot
+    loop builder !i =
+      case quotRem i 10 of
+        (quot, !rem) ->
+          case hexadecimalDigit rem <> builder of
+            newBuilder ->
+              if quot /= 0
+                then loop newBuilder quot
+                else newBuilder
+
+{-# INLINE hexadecimal #-}
+hexadecimal :: Integral a => a -> Builder
+hexadecimal i =
+  if i >= 0
+    then unsignedHexadecimal i
+    else unicodeCodePoint 45 <> unsignedHexadecimal (negate i)
+
+{-# INLINE unsignedHexadecimal #-}
+unsignedHexadecimal :: Integral a => a -> Builder
+unsignedHexadecimal =
+  loop mempty
+  where
+    loop builder !i =
+      case quotRem i 16 of
+        (quot, !rem) ->
+          case hexadecimalDigit rem <> builder of
+            newBuilder ->
+              if quot /= 0
+                then loop newBuilder quot
+                else newBuilder
+
+{-# INLINE decimalDigit #-}
+decimalDigit :: Integral a => a -> Builder
+decimalDigit n =
+  unicodeCodePoint (fromIntegral n + 48)
+
+{-# INLINE hexadecimalDigit #-}
+hexadecimalDigit :: Integral a => a -> Builder
+hexadecimalDigit n =
+  if n <= 9
+    then unicodeCodePoint (fromIntegral n + 48)
+    else unicodeCodePoint (fromIntegral n + 87)
 
 {-# INLINE length #-}
 length :: Builder -> Int

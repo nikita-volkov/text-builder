@@ -28,6 +28,15 @@ main =
       mconcat texts ===
       B.run (mconcat (map B.text texts))
     ,
-    testCase "Integral" $
-    assertEqual "" "123" (B.run (B.integral 123))
+    testProperty "Decimal" $ \ (x :: Integer) ->
+    (fromString . show) x === (B.run (B.decimal x))
+    ,
+    testProperty "Hexadecimal vs std show" $ \ (x :: Integer) -> x >= 0 ==>
+    (fromString . showHex x) "" === (B.run . B.hexadecimal) x
+    ,
+    testCase "Hexadecimal" $
+    assertEqual "" "1f23" (B.run (B.hexadecimal 0x01f23))
+    ,
+    testCase "Negative Hexadecimal" $
+    assertEqual "" "-1f23" (B.run (B.hexadecimal (-0x01f23)))
   ]
