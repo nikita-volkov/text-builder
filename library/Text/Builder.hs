@@ -105,13 +105,11 @@ utf8CodeUnits4 unit1 unit2 unit3 unit4 =
 {-# INLINABLE text #-}
 text :: Text -> Builder
 text (C.Text array offset length) =
-  Builder action actualLength
+  Builder action length
   where
     action =
       Action $ \builderArray builderOffset -> do
-        B.copyI builderArray builderOffset array offset (builderOffset + actualLength)
-    actualLength =
-      length - offset
+        B.copyI builderArray builderOffset array offset (builderOffset + length)
 
 {-# INLINE string #-}
 string :: String -> Builder
