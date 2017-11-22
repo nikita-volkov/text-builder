@@ -14,17 +14,17 @@ main =
   testGroup "All tests" $
   [
     testProperty "Packing a list of chars is isomorphic to appending a list of builders" $
-    \chars ->
+    \ chars ->
       A.pack chars ===
       B.run (foldMap B.char chars)
     ,
     testProperty "Concatting a list of texts is isomorphic to fold-mapping with builders" $
-    \texts ->
+    \ texts ->
       mconcat texts ===
       B.run (foldMap B.text texts)
     ,
     testProperty "Concatting a list of texts is isomorphic to concatting a list of builders" $
-    \texts ->
+    \ texts ->
       mconcat texts ===
       B.run (mconcat (map B.text texts))
     ,
