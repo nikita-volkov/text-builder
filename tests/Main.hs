@@ -28,6 +28,14 @@ main =
       mconcat texts ===
       B.run (mconcat (map B.text texts))
     ,
+    testProperty "Concatting a list of trimmed texts is isomorphic to concatting a list of builders" $
+    \ texts ->
+      let
+        trimmedTexts = fmap (A.drop 3) texts
+        in
+          mconcat trimmedTexts ===
+          B.run (mconcat (map B.text trimmedTexts))
+    ,
     testProperty "Decimal" $ \ (x :: Integer) ->
     (fromString . show) x === (B.run (B.decimal x))
     ,
