@@ -93,7 +93,7 @@ benchmark text-benchmark
     -- 
     text-builder,
     -- benchmarking:
-    criterion == 1.1.*,
+    criterion >= 1.1 && < 1.5,
     -- general:
     rerebase == 1.*
 
@@ -117,6 +117,6 @@ benchmark char-benchmark
     -- 
     text-builder,
     -- benchmarking:
-    criterion == 1.1.*,
+    criterion >= 1.1 && < 1.5,
     -- general:
     rerebase == 1.*
