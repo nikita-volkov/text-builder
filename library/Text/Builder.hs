@@ -52,7 +52,8 @@ instance Monoid Builder where
       size =
         size1 + size2
 
-instance Semigroup Builder
+instance Semigroup Builder where
+  (<>) = mappend
 
 {-# INLINE char #-}
 char :: Char -> Builder
