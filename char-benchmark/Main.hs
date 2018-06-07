@@ -50,16 +50,16 @@ plainTextPackingSubject =
 
 {-# NOINLINE smallInput #-}
 smallInput :: [Int]
-!smallInput =
+smallInput =
   map ord ['a', 'b', 'Ф', '漢', chr 0x11000]
 
 {-# NOINLINE mediumInput #-}
 mediumInput :: [Int]
-!mediumInput =
+mediumInput =
   mconcat (replicate 1000 smallInput)
 
 {-# NOINLINE largeInput #-}
 largeInput :: [Int]
-!largeInput =
+largeInput =
   mconcat (replicate 100000 smallInput)
 
