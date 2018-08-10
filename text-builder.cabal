@@ -1,5 +1,5 @@
 name: text-builder
-version: 0.5.1.1
+version: 0.5.2
 category: Text
 synopsis: An efficient strict text builder
 homepage: https://github.com/nikita-volkov/text-builder
