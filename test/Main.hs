@@ -13,6 +13,11 @@ main =
   defaultMain $
   testGroup "All tests" $
   [
+    testProperty "Intercalation has the same effect as in Text" $
+    \ separator texts ->
+      A.intercalate separator texts ===
+      B.run (B.intercalate (B.text separator) (fmap B.text texts))
+    ,
     testProperty "Packing a list of chars is isomorphic to appending a list of builders" $
     \ chars ->
       A.pack chars ===

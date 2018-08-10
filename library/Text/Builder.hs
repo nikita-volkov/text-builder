@@ -4,6 +4,7 @@ module Text.Builder
   run,
   length,
   null,
+  intercalate,
   char,
   text,
   string,
@@ -23,7 +24,7 @@ module Text.Builder
 )
 where
 
-import Text.Builder.Prelude hiding (length, null)
+import Text.Builder.Prelude hiding (length, null, intercalate)
 import qualified Data.Text.Array as B
 import qualified Data.Text.Internal as C
 import qualified Data.Text.Encoding as E
@@ -178,6 +179,13 @@ length (Builder _ x) = x
 {-# INLINE null #-}
 null :: Builder -> Bool
 null = (== 0) . length
+
+{-# INLINE intercalate #-}
+intercalate :: Foldable foldable => Builder -> foldable Builder -> Builder
+intercalate separator = foldl' step mempty where
+  step builder element = if null builder
+    then element
+    else builder <> separator <> element
 
 run :: Builder -> Text
 run (Builder (Action action) size) =
