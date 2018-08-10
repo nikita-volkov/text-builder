@@ -56,6 +56,9 @@ instance Monoid Builder where
 instance Semigroup Builder where
   (<>) = mappend
 
+instance IsString Builder where
+  fromString = string
+
 {-# INLINE char #-}
 char :: Char -> Builder
 char x =
