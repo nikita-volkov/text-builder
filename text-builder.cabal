@@ -28,9 +28,9 @@ library
     semigroups >=0.18 && <0.19,
     text >=1 && <2
 
-test-suite tests
+test-suite test
   type: exitcode-stdio-1.0
-  hs-source-dirs: tests
+  hs-source-dirs: test
   default-extensions: Arrows, BangPatterns, ConstraintKinds, DataKinds, DefaultSignatures, DeriveDataTypeable, DeriveFoldable, DeriveFunctor, DeriveGeneric, DeriveTraversable, EmptyDataDecls, FlexibleContexts, FlexibleInstances, FunctionalDependencies, GADTs, GeneralizedNewtypeDeriving, LambdaCase, LiberalTypeSynonyms, MagicHash, MultiParamTypeClasses, MultiWayIf, NoImplicitPrelude, NoMonomorphismRestriction, OverloadedStrings, PatternGuards, ParallelListComp, QuasiQuotes, RankNTypes, RecordWildCards, ScopedTypeVariables, StandaloneDeriving, TemplateHaskell, TupleSections, TypeFamilies, TypeOperators, UnboxedTuples
   default-language: Haskell2010
   main-is: Main.hs
@@ -43,9 +43,9 @@ test-suite tests
     tasty-quickcheck >=0.9 && <0.11,
     text-builder
 
-benchmark text-benchmark
+benchmark benchmark-text
   type: exitcode-stdio-1.0
-  hs-source-dirs: text-benchmark
+  hs-source-dirs: benchmark-text
   default-extensions: Arrows, BangPatterns, ConstraintKinds, DataKinds, DefaultSignatures, DeriveDataTypeable, DeriveFoldable, DeriveFunctor, DeriveTraversable, DeriveGeneric, EmptyDataDecls, FlexibleContexts, FlexibleInstances, FunctionalDependencies, GADTs, GeneralizedNewtypeDeriving, LambdaCase, LiberalTypeSynonyms, MagicHash, MultiParamTypeClasses, MultiWayIf, NoImplicitPrelude, NoMonomorphismRestriction, OverloadedStrings, PatternGuards, ParallelListComp, QuasiQuotes, RankNTypes, RecordWildCards, ScopedTypeVariables, StandaloneDeriving, TemplateHaskell, TupleSections, TypeFamilies, TypeOperators, UnboxedTuples
   default-language: Haskell2010
   ghc-options: -O2 -threaded "-with-rtsopts=-N" -funbox-strict-fields
@@ -55,9 +55,9 @@ benchmark text-benchmark
     rerebase ==1.*,
     text-builder
 
-benchmark char-benchmark
+benchmark benchmark-char
   type: exitcode-stdio-1.0
-  hs-source-dirs: char-benchmark
+  hs-source-dirs: benchmark-char
   default-extensions: Arrows, BangPatterns, ConstraintKinds, DataKinds, DefaultSignatures, DeriveDataTypeable, DeriveFoldable, DeriveFunctor, DeriveTraversable, DeriveGeneric, EmptyDataDecls, FlexibleContexts, FlexibleInstances, FunctionalDependencies, GADTs, GeneralizedNewtypeDeriving, LambdaCase, LiberalTypeSynonyms, MagicHash, MultiParamTypeClasses, MultiWayIf, NoImplicitPrelude, NoMonomorphismRestriction, OverloadedStrings, PatternGuards, ParallelListComp, QuasiQuotes, RankNTypes, RecordWildCards, ScopedTypeVariables, StandaloneDeriving, TemplateHaskell, TupleSections, TypeFamilies, TypeOperators, UnboxedTuples
   default-language: Haskell2010
   ghc-options: -O2 -threaded "-with-rtsopts=-N" -funbox-strict-fields
