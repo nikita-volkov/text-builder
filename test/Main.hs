@@ -13,8 +13,8 @@ main =
   defaultMain $
   testGroup "All tests" $
   [
-    testProperty "Intercalation has the same effect as in Text" $
-    \ separator texts ->
+    testProperty "Intercalation has the same effect as in Text, unless the first argument is empty string" $
+    \ separator texts -> (take 1 texts /= [""]) ==>
       A.intercalate separator texts ===
       B.run (B.intercalate (B.text separator) (fmap B.text texts))
     ,
