@@ -22,7 +22,7 @@ library
     Text.Builder.UTF16
     Text.Builder.Prelude
   build-depends:
-    base >=4.6 && <5,
+    base >=4.9 && <5,
     base-prelude <2,
     bytestring >=0.10 && <0.11,
     semigroups >=0.18 && <0.19,
