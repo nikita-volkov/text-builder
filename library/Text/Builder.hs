@@ -185,10 +185,12 @@ null = (== 0) . length
 
 {-# INLINE intercalate #-}
 intercalate :: Foldable foldable => Builder -> foldable Builder -> Builder
-intercalate separator = foldl' step mempty where
-  step builder element = if null builder
-    then element
-    else builder <> separator <> element
+intercalate separator = extract . foldl' step init where
+  init = Product2 False mempty
+  step (Product2 isNotFirst builder) element = Product2 True $ if isNotFirst
+    then builder <> separator <> element
+    else element
+  extract (Product2 _ builder) = builder
 
 run :: Builder -> Text
 run (Builder (Action action) size) =

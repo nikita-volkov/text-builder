@@ -1,6 +1,7 @@
 module Text.Builder.Prelude
 ( 
   module Exports,
+  Product2(..),
 )
 where
 
@@ -20,3 +21,5 @@ import Data.ByteString as Exports (ByteString)
 -- text
 -------------------------
 import Data.Text as Exports (Text)
+
+data Product2 a b = Product2 !a !b
