@@ -8,6 +8,7 @@ module Text.Builder
   char,
   text,
   string,
+  asciiByteString,
   unicodeCodePoint,
   utf16CodeUnits1,
   utf16CodeUnits2,
@@ -30,6 +31,7 @@ import qualified Data.Text.Internal as C
 import qualified Data.Text.Encoding as E
 import qualified Data.Text.Encoding.Error as E
 import qualified Text.Builder.UTF16 as D
+import qualified Data.ByteString as ByteString
 
 
 newtype Action =
@@ -106,6 +108,18 @@ utf8CodeUnits3 unit1 unit2 unit3 =
 utf8CodeUnits4 :: Word8 -> Word8 -> Word8 -> Word8 -> Builder
 utf8CodeUnits4 unit1 unit2 unit3 unit4 =
   D.utf8CodeUnits4 unit1 unit2 unit3 unit4 utf16CodeUnits1 utf16CodeUnits2
+
+{-# INLINABLE asciiByteString #-}
+asciiByteString :: ByteString -> Builder
+asciiByteString byteString =
+  Builder action (ByteString.length byteString)
+  where
+    action =
+      Action $ \array -> let
+        step byte next index = do
+          B.unsafeWrite array index (fromIntegral byte)
+          next (succ index)
+        in ByteString.foldr step (const (return ())) byteString
 
 {-# INLINABLE text #-}
 text :: Text -> Builder

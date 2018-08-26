@@ -1,18 +1,28 @@
 module Main where
 
-import Prelude
+import Prelude hiding (choose)
 import Test.QuickCheck.Instances
 import Test.Tasty
 import Test.Tasty.HUnit
 import Test.Tasty.QuickCheck
 import qualified Data.Text as A
 import qualified Text.Builder as B
+import qualified Data.ByteString as ByteString
+import qualified Data.Text.Encoding as Text
 
 
 main =
   defaultMain $
   testGroup "All tests" $
   [
+    testProperty "ASCII ByteString" $ let
+      gen = listOf $ do
+        list <- listOf (choose (0, 127))
+        return (ByteString.pack list)
+      in forAll gen $ \ chunks ->
+        mconcat chunks ===
+        Text.encodeUtf8 (B.run (foldMap B.asciiByteString chunks))
+    ,
     testProperty "Intercalation has the same effect as in Text" $
     \ separator texts ->
       A.intercalate separator texts ===
