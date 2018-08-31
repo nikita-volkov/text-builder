@@ -209,7 +209,7 @@ decimal i =
 {-# INLINABLE unsignedDecimal #-}
 unsignedDecimal :: Integral a => a -> Builder
 unsignedDecimal =
-  foldMap decimalDigit . Unfoldr.digits
+  foldMap decimalDigit . Unfoldr.decimalDigits
 
 {-| Decimal representation of an integral value with thousands separated by the specified character -}
 {-# INLINABLE thousandSeparatedDecimal #-}
@@ -224,7 +224,7 @@ thousandSeparatedDecimal separatorChar a =
 thousandSeparatedUnsignedDecimal :: Integral a => Char -> a -> Builder
 thousandSeparatedUnsignedDecimal separatorChar a =
   fold $ do
-    (index, digit) <- Unfoldr.zipWithReverseIndex $ Unfoldr.digits a
+    (index, digit) <- Unfoldr.zipWithReverseIndex $ Unfoldr.decimalDigits a
     if mod index 3 == 0 && index /= 0
       then return (decimalDigit digit <> char separatorChar)
       else return (decimalDigit digit)
@@ -241,16 +241,7 @@ hexadecimal i =
 {-# INLINE unsignedHexadecimal #-}
 unsignedHexadecimal :: Integral a => a -> Builder
 unsignedHexadecimal =
-  loop mempty
-  where
-    loop builder !i =
-      case quotRem i 16 of
-        (quot, !rem) ->
-          case hexadecimalDigit rem <> builder of
-            newBuilder ->
-              if quot /= 0
-                then loop newBuilder quot
-                else newBuilder
+  foldMap hexadecimalDigit . Unfoldr.hexadecimalDigits
 
 {-| Decimal digit -}
 {-# INLINE decimalDigit #-}
