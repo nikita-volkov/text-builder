@@ -45,6 +45,10 @@ import qualified Data.Text as Text
 newtype Action =
   Action (forall s. B.MArray s -> Int -> ST s ())
 
+{-|
+Specification of how to efficiently construct strict 'Text'.
+Provides instances of 'Semigroup' and 'Monoid', which have complexity of /O(1)/.
+-}
 data Builder =
   Builder !Action !Int !Int
 
@@ -75,14 +79,17 @@ instance IsString Builder where
 -- * Accessors
 -------------------------
 
+{-| Get the amount of characters -}
 {-# INLINE length #-}
 length :: Builder -> Int
 length (Builder _ _ x) = x
 
+{-| Check whether the builder is empty -}
 {-# INLINE null #-}
 null :: Builder -> Bool
 null = (== 0) . length
 
+{-| Execute a builder producing a strict text -}
 run :: Builder -> Text
 run (Builder (Action action) arraySize _) =
   C.text array 0 arraySize
@@ -97,16 +104,19 @@ run (Builder (Action action) arraySize _) =
 -- * Constructors
 -------------------------
 
+{-| Unicode character -}
 {-# INLINE char #-}
 char :: Char -> Builder
 char x =
   unicodeCodePoint (ord x)
 
+{-| Unicode code point-}
 {-# INLINE unicodeCodePoint #-}
 unicodeCodePoint :: Int -> Builder
 unicodeCodePoint x =
   D.unicodeCodePoint x utf16CodeUnits1 utf16CodeUnits2
 
+{-| Single code-unit UTF-16 character -}
 {-# INLINABLE utf16CodeUnits1 #-}
 utf16CodeUnits1 :: Word16 -> Builder
 utf16CodeUnits1 unit =
@@ -115,6 +125,7 @@ utf16CodeUnits1 unit =
     action =
       Action $ \array offset -> B.unsafeWrite array offset unit
 
+{-| Double code-unit UTF-16 character -}
 {-# INLINABLE utf16CodeUnits2 #-}
 utf16CodeUnits2 :: Word16 -> Word16 -> Builder
 utf16CodeUnits2 unit1 unit2 =
@@ -125,26 +136,31 @@ utf16CodeUnits2 unit1 unit2 =
         B.unsafeWrite array offset unit1
         B.unsafeWrite array (succ offset) unit2
 
+{-| Single code-unit UTF-8 character -}
 {-# INLINE utf8CodeUnits1 #-}
 utf8CodeUnits1 :: Word8 -> Builder
 utf8CodeUnits1 unit1 =
   D.utf8CodeUnits1 unit1 utf16CodeUnits1 utf16CodeUnits2
 
+{-| Double code-unit UTF-8 character -}
 {-# INLINE utf8CodeUnits2 #-}
 utf8CodeUnits2 :: Word8 -> Word8 -> Builder
 utf8CodeUnits2 unit1 unit2 =
   D.utf8CodeUnits2 unit1 unit2 utf16CodeUnits1 utf16CodeUnits2
 
+{-| Triple code-unit UTF-8 character -}
 {-# INLINE utf8CodeUnits3 #-}
 utf8CodeUnits3 :: Word8 -> Word8 -> Word8 -> Builder
 utf8CodeUnits3 unit1 unit2 unit3 =
   D.utf8CodeUnits3 unit1 unit2 unit3 utf16CodeUnits1 utf16CodeUnits2
 
+{-| UTF-8 character out of 4 code units -}
 {-# INLINE utf8CodeUnits4 #-}
 utf8CodeUnits4 :: Word8 -> Word8 -> Word8 -> Word8 -> Builder
 utf8CodeUnits4 unit1 unit2 unit3 unit4 =
   D.utf8CodeUnits4 unit1 unit2 unit3 unit4 utf16CodeUnits1 utf16CodeUnits2
 
+{-| ASCII byte string -}
 {-# INLINABLE asciiByteString #-}
 asciiByteString :: ByteString -> Builder
 asciiByteString byteString =
@@ -158,6 +174,7 @@ asciiByteString byteString =
           next (succ index)
         in ByteString.foldr step (const (return ())) byteString
 
+{-| Strict text -}
 {-# INLINABLE text #-}
 text :: Text -> Builder
 text text@(C.Text array offset length) =
@@ -167,11 +184,13 @@ text text@(C.Text array offset length) =
       Action $ \builderArray builderOffset -> do
         B.copyI builderArray builderOffset array offset (builderOffset + length)
 
+{-| String -}
 {-# INLINE string #-}
 string :: String -> Builder
 string =
   foldMap char
 
+{-| Decimal representation of an integral value -}
 {-# INLINABLE decimal #-}
 decimal :: Integral a => a -> Builder
 decimal i =
@@ -179,11 +198,13 @@ decimal i =
     then unsignedDecimal i
     else unicodeCodePoint 45 <> unsignedDecimal (negate i)
 
+{-| Decimal representation of an unsigned integral value -}
 {-# INLINABLE unsignedDecimal #-}
 unsignedDecimal :: Integral a => a -> Builder
 unsignedDecimal =
   foldMap decimalDigit . Unfoldr.digits
 
+{-| Decimal representation of an integral value with thousands separated by the specified character -}
 {-# INLINABLE thousandSeparatedDecimal #-}
 thousandSeparatedDecimal :: Integral a => Char -> a -> Builder
 thousandSeparatedDecimal separatorChar a =
@@ -191,6 +212,7 @@ thousandSeparatedDecimal separatorChar a =
     then thousandSeparatedUnsignedDecimal separatorChar a
     else unicodeCodePoint 45 <> thousandSeparatedUnsignedDecimal separatorChar (negate a)
 
+{-| Decimal representation of an unsigned integral value with thousands separated by the specified character -}
 {-# INLINABLE thousandSeparatedUnsignedDecimal #-}
 thousandSeparatedUnsignedDecimal :: Integral a => Char -> a -> Builder
 thousandSeparatedUnsignedDecimal separatorChar a =
@@ -200,6 +222,7 @@ thousandSeparatedUnsignedDecimal separatorChar a =
       then return (decimalDigit digit <> char separatorChar)
       else return (decimalDigit digit)
 
+{-| Hexadecimal representation of an integral value -}
 {-# INLINE hexadecimal #-}
 hexadecimal :: Integral a => a -> Builder
 hexadecimal i =
@@ -207,6 +230,7 @@ hexadecimal i =
     then unsignedHexadecimal i
     else unicodeCodePoint 45 <> unsignedHexadecimal (negate i)
 
+{-| Unsigned hexadecimal representation of an integral value -}
 {-# INLINE unsignedHexadecimal #-}
 unsignedHexadecimal :: Integral a => a -> Builder
 unsignedHexadecimal =
@@ -221,11 +245,13 @@ unsignedHexadecimal =
                 then loop newBuilder quot
                 else newBuilder
 
+{-| Decimal digit -}
 {-# INLINE decimalDigit #-}
 decimalDigit :: Integral a => a -> Builder
 decimalDigit n =
   unicodeCodePoint (fromIntegral n + 48)
 
+{-| Hexadecimal digit -}
 {-# INLINE hexadecimalDigit #-}
 hexadecimalDigit :: Integral a => a -> Builder
 hexadecimalDigit n =
@@ -233,6 +259,7 @@ hexadecimalDigit n =
     then unicodeCodePoint (fromIntegral n + 48)
     else unicodeCodePoint (fromIntegral n + 87)
 
+{-| Intercalate builders -}
 {-# INLINE intercalate #-}
 intercalate :: Foldable foldable => Builder -> foldable Builder -> Builder
 intercalate separator = extract . foldl' step init where
@@ -242,6 +269,7 @@ intercalate separator = extract . foldl' step init where
     else element
   extract (Product2 _ builder) = builder
 
+{-| Pad a builder from the left side to the specified length with the specified character -}
 {-# INLINABLE padFromLeft #-}
 padFromLeft :: Int -> Char -> Builder -> Builder
 padFromLeft paddedLength paddingChar builder = let
