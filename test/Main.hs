@@ -63,6 +63,13 @@ main =
       assertEqual "" "1,234" (B.run (B.thousandSeparatedUnsignedDecimal ',' 1234))
       assertEqual "" "1,234,567" (B.run (B.thousandSeparatedUnsignedDecimal ',' 1234567))
     ,
+    testCase "Pad from left" $ do
+      assertEqual "" "00" (B.run (B.padFromLeft 2 '0' ""))
+      assertEqual "" "00" (B.run (B.padFromLeft 2 '0' "0"))
+      assertEqual "" "01" (B.run (B.padFromLeft 2 '0' "1"))
+      assertEqual "" "12" (B.run (B.padFromLeft 2 '0' "12"))
+      assertEqual "" "123" (B.run (B.padFromLeft 2 '0' "123"))
+    ,
     testCase "Hexadecimal" $
     assertEqual "" "1f23" (B.run (B.hexadecimal 0x01f23))
     ,

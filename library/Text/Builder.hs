@@ -38,28 +38,31 @@ import qualified Data.Text.Encoding.Error as E
 import qualified Text.Builder.UTF16 as D
 import qualified Data.ByteString as ByteString
 import qualified DeferredFolds.Unfoldr as Unfoldr
+import qualified Data.Text as Text
 
 
 newtype Action =
   Action (forall s. B.MArray s -> Int -> ST s ())
 
 data Builder =
-  Builder !Action !Int
+  Builder !Action !Int !Int
 
 instance Monoid Builder where
   {-# INLINE mempty #-}
   mempty =
-    Builder (Action (\_ _ -> return ())) 0
+    Builder (Action (\_ _ -> return ())) 0 0
   {-# INLINABLE mappend #-}
-  mappend (Builder (Action action1) size1) (Builder (Action action2) size2) =
-    Builder action size
+  mappend (Builder (Action action1) arraySize1 charsAmount1) (Builder (Action action2) arraySize2 charsAmount2) =
+    Builder action arraySize charsAmount
     where
       action =
         Action $ \array offset -> do
           action1 array offset
-          action2 array (offset + size1)
-      size =
-        size1 + size2
+          action2 array (offset + arraySize1)
+      arraySize =
+        arraySize1 + arraySize2
+      charsAmount =
+        charsAmount1 + charsAmount2
 
 instance Semigroup Builder where
   (<>) = mappend
@@ -73,19 +76,19 @@ instance IsString Builder where
 
 {-# INLINE length #-}
 length :: Builder -> Int
-length (Builder _ x) = x
+length (Builder _ _ x) = x
 
 {-# INLINE null #-}
 null :: Builder -> Bool
 null = (== 0) . length
 
 run :: Builder -> Text
-run (Builder (Action action) size) =
-  C.text array 0 size
+run (Builder (Action action) arraySize _) =
+  C.text array 0 arraySize
   where
     array =
       runST $ do
-        array <- B.new size
+        array <- B.new arraySize
         action array 0
         B.unsafeFreeze array
 
@@ -106,7 +109,7 @@ unicodeCodePoint x =
 {-# INLINABLE utf16CodeUnits1 #-}
 utf16CodeUnits1 :: Word16 -> Builder
 utf16CodeUnits1 unit =
-  Builder action 1
+  Builder action 1 1
   where
     action =
       Action $ \array offset -> B.unsafeWrite array offset unit
@@ -114,7 +117,7 @@ utf16CodeUnits1 unit =
 {-# INLINABLE utf16CodeUnits2 #-}
 utf16CodeUnits2 :: Word16 -> Word16 -> Builder
 utf16CodeUnits2 unit1 unit2 =
-  Builder action 2
+  Builder action 2 1
   where
     action =
       Action $ \array offset -> do
@@ -144,8 +147,9 @@ utf8CodeUnits4 unit1 unit2 unit3 unit4 =
 {-# INLINABLE asciiByteString #-}
 asciiByteString :: ByteString -> Builder
 asciiByteString byteString =
-  Builder action (ByteString.length byteString)
+  Builder action length length
   where
+    length = ByteString.length byteString
     action =
       Action $ \array -> let
         step byte next index = do
@@ -155,8 +159,8 @@ asciiByteString byteString =
 
 {-# INLINABLE text #-}
 text :: Text -> Builder
-text (C.Text array offset length) =
-  Builder action length
+text text@(C.Text array offset length) =
+  Builder action length (Text.length text)
   where
     action =
       Action $ \builderArray builderOffset -> do
@@ -243,4 +247,4 @@ padFromLeft paddedLength paddingChar builder = let
   builderLength = length builder
   in if paddedLength <= builderLength
     then builder
-    else foldMap char (replicate (builderLength - paddedLength) paddingChar) <> builder
+    else foldMap char (replicate (paddedLength - builderLength) paddingChar) <> builder
