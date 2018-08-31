@@ -75,4 +75,13 @@ main =
     ,
     testCase "Negative Hexadecimal" $
     assertEqual "" "-1f23" (B.run (B.hexadecimal (-0x01f23)))
+    ,
+    testGroup "Time interval" $
+    [
+      testCase "59s" $ assertEqual "" "00:00:00:59" $ B.run $ B.intervalInSeconds 59,
+      testCase "minute" $ assertEqual "" "00:00:01:00" $ B.run $ B.intervalInSeconds 60,
+      testCase "90s" $ assertEqual "" "00:00:01:30" $ B.run $ B.intervalInSeconds 90,
+      testCase "hour" $ assertEqual "" "00:01:00:00" $ B.run $ B.intervalInSeconds 3600,
+      testCase "day" $ assertEqual "" "01:00:00:00" $ B.run $ B.intervalInSeconds 86400
+    ]
   ]

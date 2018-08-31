@@ -85,4 +85,13 @@ import Data.Text as Exports (Text)
 -------------------------
 import DeferredFolds.Unfoldr as Exports (Unfoldr(..))
 
+-- transformers
+-------------------------
+import Control.Monad.IO.Class as Exports
+import Control.Monad.Trans.Class as Exports
+import Control.Monad.Trans.Maybe as Exports hiding (liftListen, liftPass)
+import Control.Monad.Trans.Reader as Exports hiding (liftCallCC, liftCatch)
+import Control.Monad.Trans.State.Strict as Exports hiding (liftCallCC, liftCatch, liftListen, liftPass)
+
+
 data Product2 a b = Product2 !a !b

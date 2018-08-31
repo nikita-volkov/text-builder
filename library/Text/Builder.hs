@@ -27,6 +27,7 @@ module Text.Builder
   unsignedHexadecimal,
   hexadecimalDigit,
   padFromLeft,
+  intervalInSeconds,
 )
 where
 
@@ -248,3 +249,20 @@ padFromLeft paddedLength paddingChar builder = let
   in if paddedLength <= builderLength
     then builder
     else foldMap char (replicate (paddedLength - builderLength) paddingChar) <> builder
+
+{-|
+Time interval in seconds.
+Directly applicable to 'DiffTime' and 'NominalDiffTime'.
+-}
+{-# INLINABLE intervalInSeconds #-}
+intervalInSeconds :: RealFrac seconds => seconds -> Builder
+intervalInSeconds interval = flip evalState (round interval) $ do
+  seconds <- state (swap . flip divMod 60)
+  minutes <- state (swap . flip divMod 60)
+  hours <- state (swap . flip divMod 24)
+  days <- get
+  return $
+    padFromLeft 2 '0' (decimal days) <> ":" <>
+    padFromLeft 2 '0' (decimal hours) <> ":" <>
+    padFromLeft 2 '0' (decimal minutes) <> ":" <>
+    padFromLeft 2 '0' (decimal seconds)
