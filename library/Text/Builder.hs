@@ -22,6 +22,7 @@ module Text.Builder
   hexadecimal,
   unsignedHexadecimal,
   hexadecimalDigit,
+  padFromLeft,
 )
 where
 
@@ -205,6 +206,14 @@ intercalate separator = extract . foldl' step init where
     then builder <> separator <> element
     else element
   extract (Product2 _ builder) = builder
+
+{-# INLINABLE padFromLeft #-}
+padFromLeft :: Int -> Char -> Builder -> Builder
+padFromLeft paddedLength paddingChar builder = let
+  builderLength = length builder
+  in if paddedLength <= builderLength
+    then builder
+    else foldMap char (replicate (builderLength - paddedLength) paddingChar) <> builder
 
 run :: Builder -> Text
 run (Builder (Action action) size) =
