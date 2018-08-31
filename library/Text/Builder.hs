@@ -1,9 +1,11 @@
 module Text.Builder
 (
   Builder,
+  -- * Accessors
   run,
   length,
   null,
+  -- * Constructors
   intercalate,
   char,
   text,
@@ -61,6 +63,32 @@ instance Semigroup Builder where
 
 instance IsString Builder where
   fromString = string
+
+
+-- * Accessors
+-------------------------
+
+{-# INLINE length #-}
+length :: Builder -> Int
+length (Builder _ x) = x
+
+{-# INLINE null #-}
+null :: Builder -> Bool
+null = (== 0) . length
+
+run :: Builder -> Text
+run (Builder (Action action) size) =
+  C.text array 0 size
+  where
+    array =
+      runST $ do
+        array <- B.new size
+        action array 0
+        B.unsafeFreeze array
+
+
+-- * Constructors
+-------------------------
 
 {-# INLINE char #-}
 char :: Char -> Builder
@@ -190,14 +218,6 @@ hexadecimalDigit n =
     then unicodeCodePoint (fromIntegral n + 48)
     else unicodeCodePoint (fromIntegral n + 87)
 
-{-# INLINE length #-}
-length :: Builder -> Int
-length (Builder _ x) = x
-
-{-# INLINE null #-}
-null :: Builder -> Bool
-null = (== 0) . length
-
 {-# INLINE intercalate #-}
 intercalate :: Foldable foldable => Builder -> foldable Builder -> Builder
 intercalate separator = extract . foldl' step init where
@@ -214,13 +234,3 @@ padFromLeft paddedLength paddingChar builder = let
   in if paddedLength <= builderLength
     then builder
     else foldMap char (replicate (builderLength - paddedLength) paddingChar) <> builder
-
-run :: Builder -> Text
-run (Builder (Action action) size) =
-  C.text array 0 size
-  where
-    array =
-      runST $ do
-        array <- B.new size
-        action array 0
-        B.unsafeFreeze array
