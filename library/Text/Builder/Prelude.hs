@@ -81,4 +81,8 @@ import Data.ByteString as Exports (ByteString)
 -------------------------
 import Data.Text as Exports (Text)
 
+-- deferred-folds
+-------------------------
+import DeferredFolds.Unfoldr as Exports (Unfoldr(..))
+
 data Product2 a b = Product2 !a !b

@@ -35,6 +35,7 @@ import qualified Data.Text.Encoding as E
 import qualified Data.Text.Encoding.Error as E
 import qualified Text.Builder.UTF16 as D
 import qualified Data.ByteString as ByteString
+import qualified DeferredFolds.Unfoldr as Unfoldr
 
 
 newtype Action =
@@ -174,16 +175,7 @@ decimal i =
 {-# INLINABLE unsignedDecimal #-}
 unsignedDecimal :: Integral a => a -> Builder
 unsignedDecimal =
-  loop mempty
-  where
-    loop builder !i =
-      case quotRem i 10 of
-        (quot, !rem) ->
-          case hexadecimalDigit rem <> builder of
-            newBuilder ->
-              if quot /= 0
-                then loop newBuilder quot
-                else newBuilder
+  foldMap decimalDigit . Unfoldr.digits
 
 {-# INLINE hexadecimal #-}
 hexadecimal :: Integral a => a -> Builder
