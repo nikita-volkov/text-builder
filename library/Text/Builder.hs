@@ -20,6 +20,8 @@ module Text.Builder
   utf8CodeUnits4,
   decimal,
   unsignedDecimal,
+  thousandSeparatedDecimal,
+  thousandSeparatedUnsignedDecimal,
   decimalDigit,
   hexadecimal,
   unsignedHexadecimal,
@@ -176,6 +178,22 @@ decimal i =
 unsignedDecimal :: Integral a => a -> Builder
 unsignedDecimal =
   foldMap decimalDigit . Unfoldr.digits
+
+{-# INLINABLE thousandSeparatedDecimal #-}
+thousandSeparatedDecimal :: Integral a => Char -> a -> Builder
+thousandSeparatedDecimal separatorChar a =
+  if a >= 0
+    then thousandSeparatedUnsignedDecimal separatorChar a
+    else unicodeCodePoint 45 <> thousandSeparatedUnsignedDecimal separatorChar (negate a)
+
+{-# INLINABLE thousandSeparatedUnsignedDecimal #-}
+thousandSeparatedUnsignedDecimal :: Integral a => Char -> a -> Builder
+thousandSeparatedUnsignedDecimal separatorChar a =
+  fold $ do
+    (index, digit) <- Unfoldr.zipWithReverseIndex $ Unfoldr.digits a
+    if mod index 3 == 0 && index /= 0
+      then return (decimalDigit digit <> char separatorChar)
+      else return (decimalDigit digit)
 
 {-# INLINE hexadecimal #-}
 hexadecimal :: Integral a => a -> Builder

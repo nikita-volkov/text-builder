@@ -57,6 +57,12 @@ main =
     testProperty "Hexadecimal vs std show" $ \ (x :: Integer) -> x >= 0 ==>
     (fromString . showHex x) "" === (B.run . B.hexadecimal) x
     ,
+    testCase "Separated thousands" $ do
+      assertEqual "" "0" (B.run (B.thousandSeparatedUnsignedDecimal ',' 0))
+      assertEqual "" "123" (B.run (B.thousandSeparatedUnsignedDecimal ',' 123))
+      assertEqual "" "1,234" (B.run (B.thousandSeparatedUnsignedDecimal ',' 1234))
+      assertEqual "" "1,234,567" (B.run (B.thousandSeparatedUnsignedDecimal ',' 1234567))
+    ,
     testCase "Hexadecimal" $
     assertEqual "" "1f23" (B.run (B.hexadecimal 0x01f23))
     ,
