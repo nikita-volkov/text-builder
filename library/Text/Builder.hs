@@ -6,11 +6,16 @@ module Text.Builder
   length,
   null,
   -- * Constructors
+  -- ** Builder manipulators
   intercalate,
-  char,
+  padFromLeft,
+  -- ** Textual
   text,
   string,
   asciiByteString,
+  -- ** Character
+  char,
+  -- *** Low-level character
   unicodeCodePoint,
   utf16CodeUnits1,
   utf16CodeUnits2,
@@ -18,15 +23,17 @@ module Text.Builder
   utf8CodeUnits2,
   utf8CodeUnits3,
   utf8CodeUnits4,
+  -- ** Integers
   decimal,
   unsignedDecimal,
   thousandSeparatedDecimal,
   thousandSeparatedUnsignedDecimal,
-  decimalDigit,
   hexadecimal,
   unsignedHexadecimal,
+  -- ** Digits
+  decimalDigit,
   hexadecimalDigit,
-  padFromLeft,
+  -- ** Time
   intervalInSeconds,
 )
 where
