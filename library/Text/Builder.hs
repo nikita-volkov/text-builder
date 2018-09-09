@@ -5,6 +5,11 @@ module Text.Builder
   run,
   length,
   null,
+  -- ** Output IO
+  putToStdOut,
+  putToStdErr,
+  putLnToStdOut,
+  putLnToStdErr,
   -- * Constructors
   -- ** Builder manipulators
   intercalate,
@@ -47,6 +52,7 @@ import qualified Text.Builder.UTF16 as D
 import qualified Data.ByteString as ByteString
 import qualified DeferredFolds.Unfoldr as Unfoldr
 import qualified Data.Text as Text
+import qualified Data.Text.IO as Text
 
 
 newtype Action =
@@ -106,6 +112,25 @@ run (Builder (Action action) arraySize _) =
         array <- B.new arraySize
         action array 0
         B.unsafeFreeze array
+
+-- ** Output IO
+-------------------------
+
+{-| Put builder, to stdout -}
+putToStdOut :: Builder -> IO ()
+putToStdOut = Text.hPutStr stdout . run
+
+{-| Put builder, to stderr -}
+putToStdErr :: Builder -> IO ()
+putToStdErr = Text.hPutStr stderr . run
+
+{-| Put builder, followed by a line, to stdout -}
+putLnToStdOut :: Builder -> IO ()
+putLnToStdOut = Text.hPutStrLn stdout . run
+
+{-| Put builder, followed by a line, to stderr -}
+putLnToStdErr :: Builder -> IO ()
+putLnToStdErr = Text.hPutStrLn stderr . run
 
 
 -- * Constructors
