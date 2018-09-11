@@ -38,6 +38,8 @@ module Text.Builder
   -- ** Digits
   decimalDigit,
   hexadecimalDigit,
+  -- ** Real
+  fixedDouble,
   -- ** Time
   intervalInSeconds,
 )
@@ -317,3 +319,8 @@ intervalInSeconds interval = flip evalState (round interval) $ do
     padFromLeft 2 '0' (decimal hours) <> ":" <>
     padFromLeft 2 '0' (decimal minutes) <> ":" <>
     padFromLeft 2 '0' (decimal seconds)
+
+{-| Double with a fixed number of decimal places. -}
+{-# INLINE fixedDouble #-}
+fixedDouble :: Int {-^ Amount of decimals after point. -} -> Double -> Builder
+fixedDouble decimalPlaces = fromString . printf ("%." ++ show decimalPlaces ++ "f")
