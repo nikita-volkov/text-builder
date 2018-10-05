@@ -29,10 +29,15 @@ module Text.Builder
   utf8CodeUnits3,
   utf8CodeUnits4,
   -- ** Integers
+  -- *** Decimal
   decimal,
   unsignedDecimal,
   thousandSeparatedDecimal,
   thousandSeparatedUnsignedDecimal,
+  -- *** Binary
+  unsignedBinary,
+  unsignedPaddedBinary,
+  -- *** Hexadecimal
   hexadecimal,
   unsignedHexadecimal,
   -- ** Digits
@@ -255,6 +260,18 @@ thousandSeparatedUnsignedDecimal separatorChar a =
     if mod index 3 == 0 && index /= 0
       then return (decimalDigit digit <> char separatorChar)
       else return (decimalDigit digit)
+
+{-| Unsigned binary number -}
+{-# INLINE unsignedBinary #-}
+unsignedBinary :: Integral a => a -> Builder
+unsignedBinary =
+  foldMap decimalDigit . Unfoldr.binaryDigits
+
+{-| Unsigned binary number -}
+{-# INLINE unsignedPaddedBinary #-}
+unsignedPaddedBinary :: (Integral a, FiniteBits a) => a -> Builder
+unsignedPaddedBinary a =
+  padFromLeft (finiteBitSize a) '0' $ foldMap decimalDigit $ Unfoldr.binaryDigits a
 
 {-| Hexadecimal representation of an integral value -}
 {-# INLINE hexadecimal #-}
