@@ -95,6 +95,9 @@ instance Semigroup Builder where
 instance IsString Builder where
   fromString = string
 
+instance Show Builder where
+  show = Text.unpack . run
+
 
 -- * Accessors
 -------------------------
