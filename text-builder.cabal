@@ -26,7 +26,7 @@ library
     base-prelude <2,
     bytestring >=0.10 && <0.11,
     deferred-folds >=0.9.9 && <0.10,
-    semigroups >=0.18 && <0.19,
+    semigroups >=0.18 && <0.20,
     text >=1 && <2,
     transformers >=0.5 && <0.6
 
