@@ -272,20 +272,29 @@ dataSizeInBytesInDecimal separatorChar amount =
   if amount < 1000
     then unsignedDecimal amount <> "B"
     else if amount < 1000000
-      then unsignedDecimal (div amount 1000) <> "kB"
+      then dividedDecimal separatorChar 100 amount <> "kB"
       else if amount < 1000000000
-        then thousandSeparatedDecimal separatorChar (div amount 1000000) <> "MB"
+        then dividedDecimal separatorChar 100000 amount <> "MB"
         else if amount < 1000000000000
-          then thousandSeparatedDecimal separatorChar (div amount 1000000000) <> "GB"
+          then dividedDecimal separatorChar 100000000 amount <> "GB"
         else if amount < 1000000000000000
-          then thousandSeparatedDecimal separatorChar (div amount 1000000000000) <> "TB"
+          then dividedDecimal separatorChar 100000000000 amount <> "TB"
         else if amount < 1000000000000000000
-          then thousandSeparatedDecimal separatorChar (div amount 1000000000000000) <> "PB"
+          then dividedDecimal separatorChar 100000000000000 amount <> "PB"
         else if amount < 1000000000000000000000
-          then thousandSeparatedDecimal separatorChar (div amount 1000000000000000000) <> "EB"
+          then dividedDecimal separatorChar 100000000000000000 amount <> "EB"
           else if amount < 1000000000000000000000000
-            then thousandSeparatedDecimal separatorChar (div amount 1000000000000000000000) <> "ZB"
-            else thousandSeparatedDecimal separatorChar (div amount 1000000000000000000000000) <> "YB"
+            then dividedDecimal separatorChar 100000000000000000000 amount <> "ZB"
+            else dividedDecimal separatorChar 100000000000000000000000 amount <> "YB"
+
+dividedDecimal :: Integral a => Char -> a -> a -> Builder
+dividedDecimal separatorChar divisor n = let
+  byDivisor = div n divisor
+  byExtraTen = div byDivisor 10
+  remainder = byDivisor - byExtraTen * 10
+  in if remainder == 0 || byExtraTen > 10
+    then thousandSeparatedDecimal separatorChar byExtraTen
+    else thousandSeparatedDecimal separatorChar byExtraTen <> "." <> decimalDigit remainder
 
 {-| Unsigned binary number -}
 {-# INLINE unsignedBinary #-}
