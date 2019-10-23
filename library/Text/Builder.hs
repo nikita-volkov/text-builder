@@ -34,6 +34,7 @@ module Text.Builder
   unsignedDecimal,
   thousandSeparatedDecimal,
   thousandSeparatedUnsignedDecimal,
+  dataSizeInBytesInDecimal,
   -- *** Binary
   unsignedBinary,
   unsignedPaddedBinary,
@@ -263,6 +264,28 @@ thousandSeparatedUnsignedDecimal separatorChar a =
     if mod index 3 == 0 && index /= 0
       then return (decimalDigit digit <> char separatorChar)
       else return (decimalDigit digit)
+
+{-| Data size in decimal notation over amount of bytes. -}
+{-# INLINABLE dataSizeInBytesInDecimal #-}
+dataSizeInBytesInDecimal :: Integral a => Char -> a -> Builder
+dataSizeInBytesInDecimal separatorChar amount =
+  if amount < 1000
+    then unsignedDecimal amount <> "B"
+    else if amount < 1000000
+      then unsignedDecimal (div amount 1000) <> "kB"
+      else if amount < 1000000000
+        then thousandSeparatedDecimal separatorChar (div amount 1000000) <> "MB"
+        else if amount < 1000000000000
+          then thousandSeparatedDecimal separatorChar (div amount 1000000000) <> "GB"
+        else if amount < 1000000000000000
+          then thousandSeparatedDecimal separatorChar (div amount 1000000000000) <> "TB"
+        else if amount < 1000000000000000000
+          then thousandSeparatedDecimal separatorChar (div amount 1000000000000000) <> "PB"
+        else if amount < 1000000000000000000000
+          then thousandSeparatedDecimal separatorChar (div amount 1000000000000000000) <> "EB"
+          else if amount < 1000000000000000000000000
+            then thousandSeparatedDecimal separatorChar (div amount 1000000000000000000000) <> "ZB"
+            else thousandSeparatedDecimal separatorChar (div amount 1000000000000000000000000) <> "YB"
 
 {-| Unsigned binary number -}
 {-# INLINE unsignedBinary #-}
