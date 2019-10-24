@@ -91,5 +91,6 @@ main =
       assertEqual "" "1.1kB" (B.run (B.dataSizeInBytesInDecimal ',' 1100))
       assertEqual "" "1.1MB" (B.run (B.dataSizeInBytesInDecimal ',' 1150000))
       assertEqual "" "9.9MB" (B.run (B.dataSizeInBytesInDecimal ',' 9990000))
+      assertEqual "" "10MB" (B.run (B.dataSizeInBytesInDecimal ',' 10100000))
       assertEqual "" "1,000YB" (B.run (B.dataSizeInBytesInDecimal ',' 1000000000000000000000000000))
   ]

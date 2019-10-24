@@ -292,7 +292,7 @@ dividedDecimal separatorChar divisor n = let
   byDivisor = div n divisor
   byExtraTen = div byDivisor 10
   remainder = byDivisor - byExtraTen * 10
-  in if remainder == 0 || byExtraTen > 10
+  in if remainder == 0 || byExtraTen >= 10
     then thousandSeparatedDecimal separatorChar byExtraTen
     else thousandSeparatedDecimal separatorChar byExtraTen <> "." <> decimalDigit remainder
 
