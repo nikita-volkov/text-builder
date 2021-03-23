@@ -12,8 +12,8 @@ type UTF16View =
 
 {-# INLINE char #-}
 char :: Char -> UTF16View
-char =
-  unicodeCodePoint . ord
+char x =
+  unicodeCodePoint (ord x)
 
 {-# INLINE unicodeCodePoint #-}
 unicodeCodePoint :: Int -> UTF16View
