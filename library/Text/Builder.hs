@@ -14,6 +14,7 @@ module Text.Builder
   -- ** Builder manipulators
   intercalate,
   padFromLeft,
+  padFromRight,
   -- ** Textual
   text,
   string,
@@ -354,6 +355,15 @@ padFromLeft paddedLength paddingChar builder = let
   in if paddedLength <= builderLength
     then builder
     else foldMap char (replicate (paddedLength - builderLength) paddingChar) <> builder
+
+{-| Pad a builder from the right side to the specified length with the specified character -}
+{-# INLINABLE padFromRight #-}
+padFromRight :: Int -> Char -> Builder -> Builder
+padFromRight paddedLength paddingChar builder = let
+  builderLength = length builder
+  in if paddedLength <= builderLength
+    then builder
+    else builder <> foldMap char (replicate (paddedLength - builderLength) paddingChar)
 
 {-|
 Time interval in seconds.

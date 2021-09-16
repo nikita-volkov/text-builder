@@ -70,6 +70,14 @@ main =
       assertEqual "" "12" (B.run (B.padFromLeft 2 '0' "12"))
       assertEqual "" "123" (B.run (B.padFromLeft 2 '0' "123"))
     ,
+    testCase "Pad from right" $ do
+      assertEqual "" "00" (B.run (B.padFromRight 2 '0' ""))
+      assertEqual "" "00" (B.run (B.padFromRight 2 '0' "0"))
+      assertEqual "" "10" (B.run (B.padFromRight 2 '0' "1"))
+      assertEqual "" "12" (B.run (B.padFromRight 2 '0' "12"))
+      assertEqual "" "123" (B.run (B.padFromRight 2 '0' "123"))
+      assertEqual "" "1  " (B.run (B.padFromRight 3 ' ' "1"))
+    ,
     testCase "Hexadecimal" $
     assertEqual "" "1f23" (B.run (B.hexadecimal 0x01f23))
     ,
