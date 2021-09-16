@@ -47,6 +47,7 @@ module Text.Builder
   hexadecimalDigit,
   -- ** Real
   fixedDouble,
+  doublePercent,
   -- ** Time
   intervalInSeconds,
 )
@@ -386,3 +387,8 @@ intervalInSeconds interval = flip evalState (round interval) $ do
 {-# INLINE fixedDouble #-}
 fixedDouble :: Int {-^ Amount of decimals after point. -} -> Double -> Builder
 fixedDouble decimalPlaces = fromString . printf ("%." ++ show decimalPlaces ++ "f")
+
+{-| Double multiplied by 100 with a fixed number of decimal places applied and followed by a percent-sign. -}
+{-# INLINE doublePercent #-}
+doublePercent :: Int {-^ Amount of decimals after point. -} -> Double -> Builder
+doublePercent decimalPlaces x = fixedDouble decimalPlaces (x * 100) <> "%"
