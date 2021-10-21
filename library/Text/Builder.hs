@@ -19,6 +19,7 @@ module Text.Builder
   text,
   string,
   asciiByteString,
+  hexData,
   -- ** Character
   char,
   -- *** Low-level character
@@ -63,6 +64,7 @@ import qualified Data.ByteString as ByteString
 import qualified DeferredFolds.Unfoldr as Unfoldr
 import qualified Data.Text as Text
 import qualified Data.Text.IO as Text
+import qualified Data.List.Split as Split
 
 
 newtype Action =
@@ -392,3 +394,15 @@ fixedDouble decimalPlaces = fromString . printf ("%." ++ show decimalPlaces ++ "
 {-# INLINE doublePercent #-}
 doublePercent :: Int {-^ Amount of decimals after point. -} -> Double -> Builder
 doublePercent decimalPlaces x = fixedDouble decimalPlaces (x * 100) <> "%"
+
+{-| Hexadecimal readable representation of binary data. -}
+{-# INLINE hexData #-}
+hexData :: ByteString -> Builder
+hexData =
+  intercalate " " . fmap mconcat
+    . Split.chunksOf 2
+    . fmap byte
+    . ByteString.unpack
+  where
+    byte =
+      padFromLeft 2 '0' . unsignedHexadecimal
