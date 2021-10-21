@@ -418,6 +418,15 @@ Typeclass for rendering into compact human-readable form.
 class Textual a where
   textualize :: a -> Builder
 
+instance Textual Text where
+  textualize = text
+
+instance Textual ByteString where
+  textualize = hexData
+
+instance Textual Int where
+  textualize = thousandSeparatedDecimal ','
+
 {-|
 Helper for simple definition of 'Show' instances. E.g.,
 
