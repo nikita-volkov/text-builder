@@ -51,6 +51,9 @@ module Text.Builder
   doublePercent,
   -- ** Time
   intervalInSeconds,
+  -- * Textual typeclass
+  Textual(..),
+  textualShow,
 )
 where
 
@@ -406,3 +409,20 @@ hexData =
   where
     byte =
       padFromLeft 2 '0' . unsignedHexadecimal
+
+-- *
+
+{-|
+Typeclass for rendering into compact human-readable form.
+-}
+class Textual a where
+  textualize :: a -> Builder
+
+{-|
+Helper for simple definition of 'Show' instances. E.g.,
+
+> instance Show YourType where
+>   show = textualShow
+-}
+textualShow :: Textual a => a -> String
+textualShow = Text.unpack . run . textualize
