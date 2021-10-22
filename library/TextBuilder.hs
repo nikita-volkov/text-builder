@@ -2,7 +2,7 @@ module TextBuilder
 (
   TextBuilder,
   -- * Accessors
-  run,
+  buildText,
   length,
   null,
   -- ** Output IO
@@ -106,7 +106,7 @@ instance IsString TextBuilder where
   fromString = string
 
 instance Show TextBuilder where
-  show = Text.unpack . run
+  show = Text.unpack . buildText
 
 
 -- * Accessors
@@ -123,8 +123,8 @@ null :: TextBuilder -> Bool
 null = (== 0) . length
 
 {-| Execute a builder producing a strict text -}
-run :: TextBuilder -> Text
-run (TextBuilder (Action action) arraySize _) =
+buildText :: TextBuilder -> Text
+buildText (TextBuilder (Action action) arraySize _) =
   C.text array 0 arraySize
   where
     array =
@@ -138,19 +138,19 @@ run (TextBuilder (Action action) arraySize _) =
 
 {-| Put builder, to stdout -}
 putToStdOut :: TextBuilder -> IO ()
-putToStdOut = Text.hPutStr stdout . run
+putToStdOut = Text.hPutStr stdout . buildText
 
 {-| Put builder, to stderr -}
 putToStdErr :: TextBuilder -> IO ()
-putToStdErr = Text.hPutStr stderr . run
+putToStdErr = Text.hPutStr stderr . buildText
 
 {-| Put builder, followed by a line, to stdout -}
 putLnToStdOut :: TextBuilder -> IO ()
-putLnToStdOut = Text.hPutStrLn stdout . run
+putLnToStdOut = Text.hPutStrLn stdout . buildText
 
 {-| Put builder, followed by a line, to stderr -}
 putLnToStdErr :: TextBuilder -> IO ()
-putLnToStdErr = Text.hPutStrLn stderr . run
+putLnToStdErr = Text.hPutStrLn stderr . buildText
 
 
 -- * Constructors
@@ -436,7 +436,7 @@ Helper for simple definition of 'Show' instances. E.g.,
 >   show = textualShow
 -}
 textualShow :: Textual a => a -> String
-textualShow = Text.unpack . run . textualize
+textualShow = Text.unpack . buildText . textualize
 
 -- *
 

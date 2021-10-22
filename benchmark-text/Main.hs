@@ -37,7 +37,7 @@ type Sample =
 
 builderSubject :: Subject
 builderSubject =
-  Subject A.text mappend mempty A.run
+  Subject A.text mappend mempty A.buildText
 
 lazyTextBuilderSubject :: Subject
 lazyTextBuilderSubject =
