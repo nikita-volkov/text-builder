@@ -432,6 +432,9 @@ Typeclass for rendering into compact human-readable form.
 class Textual a where
   textualize :: a -> TextBuilder
 
+instance Textual TextBuilder where
+  textualize = id
+
 instance Textual Text where
   textualize = text
 
