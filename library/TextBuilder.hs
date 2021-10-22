@@ -454,3 +454,9 @@ instance Textual (Labelled a) where
 instance Show (Labelled a) where
   show = textualShow
 
+instance Semigroup a => Semigroup (Labelled a) where
+  Labelled lb la <> Labelled rb ra =
+    Labelled (lb <> rb) (la <> ra)
+
+instance Monoid a => Monoid (Labelled a) where
+  mempty = Labelled mempty mempty
