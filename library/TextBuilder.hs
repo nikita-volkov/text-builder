@@ -15,6 +15,8 @@ module TextBuilder
   intercalate,
   padFromLeft,
   padFromRight,
+  -- ** Typeclass-based combinators
+  (!),
   -- ** Textual
   text,
   string,
@@ -393,12 +395,12 @@ intervalInSeconds interval = flip evalState (round interval) $ do
 {-| Double with a fixed number of decimal places. -}
 {-# INLINE fixedDouble #-}
 fixedDouble :: Int {-^ Amount of decimals after point. -} -> Double -> TextBuilder
-fixedDouble decimalPlaces = fromString . printf ("%." ++ show decimalPlaces ++ "f")
+fixedDouble decimalPlaces = fromString . printf ("!." ++ show decimalPlaces ++ "f")
 
 {-| Double multiplied by 100 with a fixed number of decimal places applied and followed by a percent-sign. -}
 {-# INLINE doublePercent #-}
 doublePercent :: Int {-^ Amount of decimals after point. -} -> Double -> TextBuilder
-doublePercent decimalPlaces x = fixedDouble decimalPlaces (x * 100) <> "%"
+doublePercent decimalPlaces x = fixedDouble decimalPlaces (x * 100) <> "!"
 
 {-| Hexadecimal readable representation of binary data. -}
 {-# INLINE hexData #-}
@@ -411,6 +413,16 @@ hexData =
   where
     byte =
       padFromLeft 2 '0' . unsignedHexadecimal
+
+{-|
+Like '(<>)' but also automatically calls 'textualize'
+on both arguments.
+
+Helps declutter the code.
+-}
+{-# INLINE (!) #-}
+(!) :: (Textual a, Textual b) => a -> b -> TextBuilder
+(!) a b = textualize a <> textualize b
 
 -- *
 
