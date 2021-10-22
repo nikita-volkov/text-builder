@@ -2,7 +2,7 @@ module Main where
 
 import Prelude
 import Criterion.Main
-import qualified Text.Builder as A
+import qualified TextBuilder as A
 import qualified Data.Text.Lazy.Builder as B
 import qualified Data.Text.Lazy as C
 import qualified Data.Text as D

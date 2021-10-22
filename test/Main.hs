@@ -6,7 +6,7 @@ import Test.Tasty
 import Test.Tasty.HUnit
 import Test.Tasty.QuickCheck
 import qualified Data.Text as A
-import qualified Text.Builder as B
+import qualified TextBuilder as B
 import qualified Data.ByteString as ByteString
 import qualified Data.Text.Encoding as Text
 

@@ -1,7 +1,7 @@
-module Text.Builder.UTF16
+module TextBuilder.UTF16
 where
 
-import Text.Builder.Prelude
+import TextBuilder.Prelude
 
 
 {-|
