@@ -447,6 +447,15 @@ instance Textual Int where
 instance Textual Char where
   textualize = char
 
+instance Textual Word8 where
+  textualize = textualize . fromIntegral @Word8 @Int
+
+instance Textual a => Textual [a] where
+  textualize a = "[" <> mconcat (intersperse ", " (fmap textualize a)) <> "]"
+
+instance (Textual a, Textual b) => Textual (a, b) where
+  textualize (a, b) = "(" <> textualize a <> ", " <> textualize b <> ")"
+
 {-|
 Helper for simple definition of 'Show' instances. E.g.,
 
