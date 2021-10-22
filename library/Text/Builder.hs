@@ -54,6 +54,8 @@ module Text.Builder
   -- * Textual typeclass
   Textual(..),
   textualShow,
+  -- * Labelling
+  Labelled(..),
 )
 where
 
@@ -435,3 +437,17 @@ Helper for simple definition of 'Show' instances. E.g.,
 -}
 textualShow :: Textual a => a -> String
 textualShow = Text.unpack . run . textualize
+
+-- *
+
+{-| Extension over a type forcing a specific textual representation. -}
+data Labelled a = Labelled !Builder a
+
+deriving instance Functor Labelled
+
+instance Textual Labelled where
+  textualize (Labelled label _) = label
+
+instance Show Labelled where
+  show = textualShow
+
