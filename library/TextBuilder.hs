@@ -441,14 +441,38 @@ instance Textual Text where
 instance Textual ByteString where
   textualize = hexData
 
-instance Textual Int where
-  textualize = thousandSeparatedDecimal ','
-
 instance Textual Char where
   textualize = char
 
+instance Textual Int8 where
+  textualize = thousandSeparatedDecimal ','
+
+instance Textual Int16 where
+  textualize = thousandSeparatedDecimal ','
+
+instance Textual Int32 where
+  textualize = thousandSeparatedDecimal ','
+
+instance Textual Int64 where
+  textualize = thousandSeparatedDecimal ','
+
+instance Textual Int where
+  textualize = thousandSeparatedDecimal ','
+
 instance Textual Word8 where
-  textualize = textualize . fromIntegral @Word8 @Int
+  textualize = thousandSeparatedUnsignedDecimal ','
+
+instance Textual Word16 where
+  textualize = thousandSeparatedUnsignedDecimal ','
+
+instance Textual Word32 where
+  textualize = thousandSeparatedUnsignedDecimal ','
+
+instance Textual Word64 where
+  textualize = thousandSeparatedUnsignedDecimal ','
+
+instance Textual Word where
+  textualize = thousandSeparatedUnsignedDecimal ','
 
 instance Textual a => Textual [a] where
   textualize a = "[" <> mconcat (intersperse ", " (fmap textualize a)) <> "]"
