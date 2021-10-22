@@ -429,6 +429,9 @@ instance Textual ByteString where
 instance Textual Int where
   textualize = thousandSeparatedDecimal ','
 
+instance Textual Char where
+  textualize = char
+
 {-|
 Helper for simple definition of 'Show' instances. E.g.,
 
