@@ -1,33 +1,26 @@
 module Main where
 
-import Prelude
 import Criterion.Main
-import qualified TextBuilder as A
-import qualified Data.Text.Lazy.Builder as B
-import qualified Data.Text.Lazy as C
 import qualified Data.Text as D
-
+import qualified Data.Text.Lazy as C
+import qualified Data.Text.Lazy.Builder as B
+import qualified TextBuilder as A
+import Prelude
 
 main =
   defaultMain $
-  [
-    subjectBenchmark "builderSubject" builderSubject
-    ,
-    subjectBenchmark "lazyTextBuilderSubject" lazyTextBuilderSubject
-    ,
-    subjectBenchmark "plainTextPackingSubject" plainTextPackingSubject
-  ]
+    [ subjectBenchmark "builderSubject" builderSubject,
+      subjectBenchmark "lazyTextBuilderSubject" lazyTextBuilderSubject,
+      subjectBenchmark "plainTextPackingSubject" plainTextPackingSubject
+    ]
 
 subjectBenchmark :: String -> Subject -> Benchmark
 subjectBenchmark title subject =
   bgroup title $
-  [
-    benchmark "Small input" smallInput subject
-    ,
-    benchmark "Medium input" mediumInput subject
-    ,
-    benchmark "Large input" largeInput subject
-  ]
+    [ benchmark "Small input" smallInput subject,
+      benchmark "Medium input" mediumInput subject,
+      benchmark "Large input" largeInput subject
+    ]
 
 benchmark :: String -> [Int] -> Subject -> Benchmark
 benchmark title input subject =
@@ -62,4 +55,3 @@ mediumInput =
 largeInput :: [Int]
 largeInput =
   mconcat (replicate 100000 smallInput)
-

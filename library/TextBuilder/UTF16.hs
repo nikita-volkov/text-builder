@@ -1,12 +1,9 @@
-module TextBuilder.UTF16
-where
+module TextBuilder.UTF16 where
 
 import TextBuilder.Prelude
 
-
-{-|
-A matching function, which chooses the continuation to run.
--}
+-- |
+-- A matching function, which chooses the continuation to run.
 type UTF16View =
   forall x. (Word16 -> x) -> (Word16 -> Word16 -> x) -> x
 
@@ -45,9 +42,9 @@ utf8CodeUnits3 byte1 byte2 byte3 case1 case2 =
   unicodeCodePoint unicode case1 case2
   where
     unicode =
-      shiftL (fromIntegral byte1 - 0xE0) 12 +
-      shiftL (fromIntegral byte2 - 0x80) 6 +
-      fromIntegral byte3 - 0x80
+      shiftL (fromIntegral byte1 - 0xE0) 12
+        + shiftL (fromIntegral byte2 - 0x80) 6
+        + fromIntegral byte3 - 0x80
 
 {-# INLINE utf8CodeUnits4 #-}
 utf8CodeUnits4 :: Word8 -> Word8 -> Word8 -> Word8 -> UTF16View
@@ -55,7 +52,7 @@ utf8CodeUnits4 byte1 byte2 byte3 byte4 case1 case2 =
   unicodeCodePoint unicode case1 case2
   where
     unicode =
-      shiftL (fromIntegral byte1 - 0xE0) 18 +
-      shiftL (fromIntegral byte2 - 0x80) 12 +
-      shiftL (fromIntegral byte3 - 0x80) 6 +
-      fromIntegral byte4 - 0x80
+      shiftL (fromIntegral byte1 - 0xE0) 18
+        + shiftL (fromIntegral byte2 - 0x80) 12
+        + shiftL (fromIntegral byte3 - 0x80) 6
+        + fromIntegral byte4 - 0x80
