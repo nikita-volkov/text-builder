@@ -66,6 +66,7 @@ module TextBuilder
     doublePercent,
 
     -- ** Time
+    utcIso8601Date,
     intervalInSeconds,
 
     -- * Textual typeclass
@@ -399,6 +400,43 @@ padFromRight paddedLength paddingChar builder =
    in if paddedLength <= builderLength
         then builder
         else builder <> foldMap char (replicate (paddedLength - builderLength) paddingChar)
+
+-- |
+-- General template for formatting date values according to the ISO8601 standard.
+-- The format is the following:
+--
+-- > 2021-11-24T12:11:02Z
+--
+-- Integrations with various time-libraries can be easily derived from that.
+utcIso8601Date ::
+  -- | Year.
+  Int ->
+  -- | Month.
+  Int ->
+  -- | Day.
+  Int ->
+  -- | Hour.
+  Int ->
+  -- | Minute.
+  Int ->
+  -- | Second.
+  Int ->
+  TextBuilder
+utcIso8601Date y mo d h mi s =
+  mconcat
+    [ padFromLeft 4 '0' $ decimal y,
+      "-",
+      padFromLeft 2 '0' $ decimal mo,
+      "-",
+      padFromLeft 2 '0' $ decimal d,
+      "T",
+      padFromLeft 2 '0' $ decimal h,
+      ":",
+      padFromLeft 2 '0' $ decimal mi,
+      ":",
+      padFromLeft 2 '0' $ decimal s,
+      "Z"
+    ]
 
 -- |
 -- Time interval in seconds.
