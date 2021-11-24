@@ -66,7 +66,7 @@ module TextBuilder
     doublePercent,
 
     -- ** Time
-    utcIso8601Date,
+    utcTimestampInIso8601,
     intervalInSeconds,
 
     -- * Textual typeclass
@@ -408,7 +408,7 @@ padFromRight paddedLength paddingChar builder =
 -- > 2021-11-24T12:11:02Z
 --
 -- Integrations with various time-libraries can be easily derived from that.
-utcIso8601Date ::
+utcTimestampInIso8601 ::
   -- | Year.
   Int ->
   -- | Month.
@@ -422,7 +422,7 @@ utcIso8601Date ::
   -- | Second.
   Int ->
   TextBuilder
-utcIso8601Date y mo d h mi s =
+utcTimestampInIso8601 y mo d h mi s =
   mconcat
     [ padFromLeft 4 '0' $ decimal y,
       "-",
