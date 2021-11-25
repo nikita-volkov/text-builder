@@ -19,9 +19,6 @@ module TextBuilder
     padFromLeft,
     padFromRight,
 
-    -- ** Typeclass-based combinators
-    (!),
-
     -- ** Textual
     text,
     string,
@@ -68,13 +65,6 @@ module TextBuilder
     -- ** Time
     utcTimestampInIso8601,
     intervalInSeconds,
-
-    -- * Textual typeclass
-    Textual (..),
-    textualShow,
-
-    -- * Labelling
-    Labelled (..),
   )
 where
 
@@ -485,95 +475,3 @@ hexData =
   where
     byte =
       padFromLeft 2 '0' . unsignedHexadecimal
-
--- |
--- Like '(<>)' but also automatically calls 'textualize'
--- on both arguments.
---
--- Helps declutter the code.
-{-# INLINE (!) #-}
-(!) :: (Textual a, Textual b) => a -> b -> TextBuilder
-(!) a b = textualize a <> textualize b
-
--- *
-
--- |
--- Typeclass for rendering into compact human-readable form.
-class Textual a where
-  textualize :: a -> TextBuilder
-
-instance Textual TextBuilder where
-  textualize = id
-
-instance Textual Text where
-  textualize = text
-
-instance Textual ByteString where
-  textualize = hexData
-
-instance Textual Char where
-  textualize = char
-
-instance Textual Int8 where
-  textualize = thousandSeparatedDecimal ','
-
-instance Textual Int16 where
-  textualize = thousandSeparatedDecimal ','
-
-instance Textual Int32 where
-  textualize = thousandSeparatedDecimal ','
-
-instance Textual Int64 where
-  textualize = thousandSeparatedDecimal ','
-
-instance Textual Int where
-  textualize = thousandSeparatedDecimal ','
-
-instance Textual Word8 where
-  textualize = thousandSeparatedUnsignedDecimal ','
-
-instance Textual Word16 where
-  textualize = thousandSeparatedUnsignedDecimal ','
-
-instance Textual Word32 where
-  textualize = thousandSeparatedUnsignedDecimal ','
-
-instance Textual Word64 where
-  textualize = thousandSeparatedUnsignedDecimal ','
-
-instance Textual Word where
-  textualize = thousandSeparatedUnsignedDecimal ','
-
-instance Textual a => Textual [a] where
-  textualize a = "[" <> mconcat (intersperse ", " (fmap textualize a)) <> "]"
-
-instance (Textual a, Textual b) => Textual (a, b) where
-  textualize (a, b) = "(" <> textualize a <> ", " <> textualize b <> ")"
-
--- |
--- Helper for simple definition of 'Show' instances. E.g.,
---
--- > instance Show YourType where
--- >   show = textualShow
-textualShow :: Textual a => a -> String
-textualShow = Text.unpack . buildText . textualize
-
--- *
-
--- | Extension over a type forcing a specific textual representation.
-data Labelled a = Labelled !TextBuilder a
-
-deriving instance Functor Labelled
-
-instance Textual (Labelled a) where
-  textualize (Labelled label _) = label
-
-instance Show (Labelled a) where
-  show = textualShow
-
-instance Semigroup a => Semigroup (Labelled a) where
-  Labelled lb la <> Labelled rb ra =
-    Labelled (lb <> rb) (la <> ra)
-
-instance Monoid a => Monoid (Labelled a) where
-  mempty = Labelled mempty mempty
