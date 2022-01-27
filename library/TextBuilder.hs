@@ -14,6 +14,9 @@ module TextBuilder
 
     -- * Constructors
 
+    -- ** Helper class
+    ToTextBuilder (..),
+
     -- ** Builder manipulators
     intercalate,
     padFromLeft,
@@ -80,14 +83,32 @@ import qualified DeferredFolds.Unfoldr as Unfoldr
 import TextBuilder.Prelude hiding (intercalate, length, null)
 import qualified TextBuilder.UTF16 as D
 
-newtype Action
-  = Action (forall s. B.MArray s -> Int -> ST s ())
+-- *
+
+-- |
+-- Default conversion to text builder.
+class ToTextBuilder a where
+  toTextBuilder :: a -> TextBuilder
+
+instance ToTextBuilder TextBuilder where
+  toTextBuilder = id
+
+instance ToTextBuilder Text where
+  toTextBuilder = text
+
+instance ToTextBuilder String where
+  toTextBuilder = fromString
+
+-- *
 
 -- |
 -- Specification of how to efficiently construct strict 'Text'.
 -- Provides instances of 'Semigroup' and 'Monoid', which have complexity of /O(1)/.
 data TextBuilder
   = TextBuilder !Action !Int !Int
+
+newtype Action
+  = Action (forall s. B.MArray s -> Int -> ST s ())
 
 instance Monoid TextBuilder where
   {-# INLINE mempty #-}
