@@ -4,8 +4,6 @@ module TextBuilder.Prelude
   )
 where
 
--- base
--------------------------
 import Control.Applicative as Exports
 import Control.Arrow as Exports
 import Control.Category as Exports
@@ -13,17 +11,6 @@ import Control.Concurrent as Exports
 import Control.Exception as Exports
 import Control.Monad as Exports hiding (forM, forM_, mapM, mapM_, msum, sequence, sequence_)
 import Control.Monad.Fix as Exports hiding (fix)
--- bytestring
--------------------------
-
--- text
--------------------------
-
--- deferred-folds
--------------------------
-
--- transformers
--------------------------
 import Control.Monad.IO.Class as Exports
 import Control.Monad.ST as Exports
 import Control.Monad.ST.Unsafe as Exports
@@ -57,7 +44,9 @@ import Data.Ratio as Exports
 import Data.STRef as Exports
 import Data.Semigroup as Exports
 import Data.String as Exports
+import Data.String.ToString as Exports
 import Data.Text as Exports (Text)
+import Data.Text.Conversions as Exports
 import Data.Traversable as Exports
 import Data.Tuple as Exports
 import Data.Unique as Exports

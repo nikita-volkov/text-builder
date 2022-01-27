@@ -115,9 +115,16 @@ instance IsString TextBuilder where
 instance Show TextBuilder where
   show = Text.unpack . buildText
 
--- * Accessors
+instance FromText TextBuilder where
+  fromText = TextBuilder.text
 
--------------------------
+instance ToText TextBuilder where
+  toText = buildText
+
+instance ToString TextBuilder where
+  toString = toString . buildText
+
+-- * Accessors
 
 -- | Get the amount of characters
 {-# INLINE length #-}
@@ -142,8 +149,6 @@ buildText (TextBuilder (Action action) arraySize _) =
 
 -- ** Output IO
 
--------------------------
-
 -- | Put builder, to stdout
 putToStdOut :: TextBuilder -> IO ()
 putToStdOut = Text.hPutStr stdout . buildText
@@ -161,8 +166,6 @@ putLnToStdErr :: TextBuilder -> IO ()
 putLnToStdErr = Text.hPutStrLn stderr . buildText
 
 -- * Constructors
-
--------------------------
 
 -- | Unicode character
 {-# INLINE char #-}
