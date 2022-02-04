@@ -18,6 +18,7 @@ module TextBuilder
     ToTextBuilder (..),
 
     -- ** Builder manipulators
+    force,
     intercalate,
     padFromLeft,
     padFromRight,
@@ -193,6 +194,16 @@ putLnToStdErr :: TextBuilder -> IO ()
 putLnToStdErr = Text.hPutStrLn stderr . buildText
 
 -- * Constructors
+
+-- |
+-- Run the builder and pack the produced text into a new builder.
+--
+-- Useful to have around builders that you reuse,
+-- because a forced builder is much faster,
+-- since it's virtually a single call @memcopy@.
+{-# INLINE force #-}
+force :: TextBuilder -> TextBuilder
+force = text . toText
 
 -- | Unicode character
 {-# INLINE char #-}
