@@ -3,7 +3,18 @@
 # For more information, please see the documentation at:
 #   https://docs.haskellstack.org/en/stable/lock_files
 
-packages: []
+packages:
+- completed:
+    name: text-builder-dev
+    version: '0.1'
+    git: https://github.com/nikita-volkov/text-builder-dev
+    pantry-tree:
+      size: 733
+      sha256: d0a01dd2d5cbfa52bb6fc4562a3bbe00e14bdb7be1fa674f84dd68fda8191d45
+    commit: 76d08010ab94ff877cb602025fa4ce5da75e53f5
+  original:
+    git: https://github.com/nikita-volkov/text-builder-dev
+    commit: 76d08010ab94ff877cb602025fa4ce5da75e53f5
 snapshots:
 - completed:
     size: 608667

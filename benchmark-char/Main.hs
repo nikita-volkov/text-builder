@@ -4,7 +4,7 @@ import Criterion.Main
 import qualified Data.Text as D
 import qualified Data.Text.Lazy as C
 import qualified Data.Text.Lazy.Builder as B
-import qualified TextBuilder as A
+import qualified Text.Builder as A
 import Prelude
 
 main =
@@ -31,7 +31,7 @@ type Subject =
 
 builderSubject :: Subject
 builderSubject =
-  A.buildText . A.string . map chr
+  A.run . A.string . map chr
 
 lazyTextBuilderSubject :: Subject
 lazyTextBuilderSubject =
