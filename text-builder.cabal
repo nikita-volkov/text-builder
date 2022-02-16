@@ -29,7 +29,7 @@ library
     base-prelude >=1.6 && <2,
     bytestring >=0.10 && <0.12,
     text >=1.2 && <3,
-    text-builder-dev >=0.1 && <0.2,
+    text-builder-dev >=0.2 && <0.3,
 
 test-suite test
   import: language-settings
