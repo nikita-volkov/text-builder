@@ -1,4 +1,4 @@
 resolver: nightly-2022-02-16
 extra-deps:
   - git: https://github.com/nikita-volkov/text-builder-dev
-    commit: 76d08010ab94ff877cb602025fa4ce5da75e53f5
+    commit: 9af591e1665ea08cef284e2443fdb7f1b8add854

@@ -26,7 +26,6 @@ library
   exposed-modules:
     Text.Builder
   build-depends:
-    base >=4.10 && <5,
     base-prelude >=1.6 && <2,
     bytestring >=0.10 && <0.12,
     text >=1.2 && <3,
