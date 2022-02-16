@@ -100,12 +100,6 @@ instance ToTextBuilder Text where
 instance ToTextBuilder String where
   toTextBuilder = fromString
 
-instance ToTextBuilder Word where
-  toTextBuilder = unsignedDecimal
-
-instance ToTextBuilder Int where
-  toTextBuilder = decimal
-
 -- *
 
 -- |
