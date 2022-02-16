@@ -1,7 +1,7 @@
 cabal-version: 3.0
 
 name: text-builder
-version: 0.6.6.3
+version: 0.6.6.4
 category: Text
 synopsis: An efficient strict text builder
 homepage: https://github.com/nikita-volkov/text-builder
