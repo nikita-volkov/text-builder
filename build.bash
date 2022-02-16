@@ -49,4 +49,4 @@ function bench {
 
 
 format
-build_all
+test
