@@ -67,9 +67,9 @@ module Text.Builder
   )
 where
 
-import BasePrelude hiding (intercalate, length, null)
 import Data.ByteString (ByteString)
 import Data.Text (Text)
+import Text.Builder.Prelude hiding (intercalate, length, null)
 import qualified TextBuilderDev as Dev
 
 -- |
