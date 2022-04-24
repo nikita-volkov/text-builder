@@ -5,12 +5,12 @@
 
 packages:
 - completed:
-    hackage: text-builder-dev-0.3@sha256:2ad5599ebb8ef13402a07f84eb50b9990f2ded747a1bc956c0d49fc94323186f,2693
+    hackage: text-builder-dev-0.3.1@sha256:86e0ad3752678a5d63a35c58ff67194cfa04eebd3832cbe81ce1a7fc29633f04,2743
     pantry-tree:
-      size: 649
-      sha256: eb8395376c9ec1bdcef8d980862df4e3629ca1fc6b07dfd6d624f8754516cbe9
+      size: 724
+      sha256: 1a874fca8c9afc672f5ca559dc16d732c4d53f3cd8cb57a321ace1304cc70754
   original:
-    hackage: text-builder-dev-0.3
+    hackage: text-builder-dev-0.3.1
 snapshots:
 - completed:
     size: 554667

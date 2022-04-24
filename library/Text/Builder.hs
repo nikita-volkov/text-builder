@@ -21,6 +21,7 @@ module Text.Builder
 
     -- ** Textual
     text,
+    lazyText,
     string,
     asciiByteString,
     hexData,
@@ -69,6 +70,7 @@ where
 
 import Data.ByteString (ByteString)
 import Data.Text (Text)
+import qualified Data.Text.Lazy as TextLazy
 import Text.Builder.Prelude hiding (intercalate, length, null)
 import qualified TextBuilderDev as Dev
 
@@ -162,6 +164,11 @@ asciiByteString = coerce Dev.asciiByteString
 {-# INLINE text #-}
 text :: Text -> Builder
 text = coerce Dev.text
+
+-- | Lazy text
+{-# INLINE lazyText #-}
+lazyText :: TextLazy.Text -> Builder
+lazyText = coerce Dev.lazyText
 
 -- | String
 {-# INLINE string #-}
