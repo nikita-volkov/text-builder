@@ -154,12 +154,12 @@ utf8CodeUnits4 :: Word8 -> Word8 -> Word8 -> Word8 -> Builder
 utf8CodeUnits4 = coerce Dev.utf8CodeUnits4
 
 -- | ASCII byte string
-{-# INLINEABLE asciiByteString #-}
+{-# INLINE asciiByteString #-}
 asciiByteString :: ByteString -> Builder
 asciiByteString = coerce Dev.asciiByteString
 
 -- | Strict text
-{-# INLINEABLE text #-}
+{-# INLINE text #-}
 text :: Text -> Builder
 text = coerce Dev.text
 
