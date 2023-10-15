@@ -64,7 +64,7 @@ library
     , base >=4.11 && <5
     , bytestring >=0.10 && <0.12
     , text >=1.2 && <3
-    , text-builder-dev >=0.3.3.3 && <0.4
+    , text-builder-dev >=0.3.4.1 && <0.4
 
 test-suite test
   import:         base
