@@ -1,3 +1,0 @@
-resolver: nightly-2022-04-21
-extra-deps:
-  - text-builder-dev-0.3.1
