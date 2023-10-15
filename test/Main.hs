@@ -3,13 +3,13 @@ module Main where
 import qualified Data.ByteString as ByteString
 import qualified Data.Text as A
 import qualified Data.Text.Encoding as Text
-import Test.QuickCheck.Instances
 import Test.Tasty
 import Test.Tasty.HUnit
 import Test.Tasty.QuickCheck
 import qualified Text.Builder as B
 import Prelude hiding (choose)
 
+main :: IO ()
 main =
   defaultMain
     $ testGroup "All tests"

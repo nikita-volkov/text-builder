@@ -1,12 +1,12 @@
 module Main where
 
 import Criterion.Main
-import qualified Data.Text as D
 import qualified Data.Text.Lazy as C
 import qualified Data.Text.Lazy.Builder as B
 import qualified Text.Builder as A
 import Prelude
 
+main :: IO ()
 main =
   defaultMain
     $ [ subjectBenchmark "builderSubject" builderSubject,

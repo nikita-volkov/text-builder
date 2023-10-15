@@ -72,8 +72,6 @@ test-suite test
   hs-source-dirs: test
   main-is:        Main.hs
   build-depends:
-    , QuickCheck >=2.13 && <3
-    , quickcheck-instances >=0.3.22 && <0.4
     , rerebase <2
     , tasty >=1.2.3 && <2
     , tasty-hunit >=0.10.0.2 && <0.11
