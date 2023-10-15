@@ -177,32 +177,32 @@ string = coerce Dev.string
 
 -- | Decimal representation of an integral value
 {-# INLINEABLE decimal #-}
-decimal :: Integral a => a -> Builder
+decimal :: (Integral a) => a -> Builder
 decimal = coerce . Dev.decimal
 
 -- | Decimal representation of an unsigned integral value
 {-# INLINEABLE unsignedDecimal #-}
-unsignedDecimal :: Integral a => a -> Builder
+unsignedDecimal :: (Integral a) => a -> Builder
 unsignedDecimal = coerce . Dev.unsignedDecimal
 
 -- | Decimal representation of an integral value with thousands separated by the specified character
 {-# INLINEABLE thousandSeparatedDecimal #-}
-thousandSeparatedDecimal :: Integral a => Char -> a -> Builder
+thousandSeparatedDecimal :: (Integral a) => Char -> a -> Builder
 thousandSeparatedDecimal = fmap coerce . Dev.thousandSeparatedDecimal
 
 -- | Decimal representation of an unsigned integral value with thousands separated by the specified character
 {-# INLINEABLE thousandSeparatedUnsignedDecimal #-}
-thousandSeparatedUnsignedDecimal :: Integral a => Char -> a -> Builder
+thousandSeparatedUnsignedDecimal :: (Integral a) => Char -> a -> Builder
 thousandSeparatedUnsignedDecimal = fmap coerce . Dev.thousandSeparatedUnsignedDecimal
 
 -- | Data size in decimal notation over amount of bytes.
 {-# INLINEABLE dataSizeInBytesInDecimal #-}
-dataSizeInBytesInDecimal :: Integral a => Char -> a -> Builder
+dataSizeInBytesInDecimal :: (Integral a) => Char -> a -> Builder
 dataSizeInBytesInDecimal = fmap coerce . Dev.dataSizeInBytesInDecimal
 
 -- | Unsigned binary number
 {-# INLINE unsignedBinary #-}
-unsignedBinary :: Integral a => a -> Builder
+unsignedBinary :: (Integral a) => a -> Builder
 unsignedBinary = coerce . Dev.unsignedBinary
 
 -- | Unsigned binary number
@@ -212,27 +212,27 @@ unsignedPaddedBinary = coerce . Dev.unsignedPaddedBinary
 
 -- | Hexadecimal representation of an integral value
 {-# INLINE hexadecimal #-}
-hexadecimal :: Integral a => a -> Builder
+hexadecimal :: (Integral a) => a -> Builder
 hexadecimal = coerce . Dev.hexadecimal
 
 -- | Unsigned hexadecimal representation of an integral value
 {-# INLINE unsignedHexadecimal #-}
-unsignedHexadecimal :: Integral a => a -> Builder
+unsignedHexadecimal :: (Integral a) => a -> Builder
 unsignedHexadecimal = coerce . Dev.unsignedHexadecimal
 
 -- | Decimal digit
 {-# INLINE decimalDigit #-}
-decimalDigit :: Integral a => a -> Builder
+decimalDigit :: (Integral a) => a -> Builder
 decimalDigit = coerce . Dev.decimalDigit
 
 -- | Hexadecimal digit
 {-# INLINE hexadecimalDigit #-}
-hexadecimalDigit :: Integral a => a -> Builder
+hexadecimalDigit :: (Integral a) => a -> Builder
 hexadecimalDigit = coerce . Dev.hexadecimalDigit
 
 -- | Intercalate builders
 {-# INLINE intercalate #-}
-intercalate :: Foldable foldable => Builder -> foldable Builder -> Builder
+intercalate :: (Foldable foldable) => Builder -> foldable Builder -> Builder
 intercalate a b = coerce (Dev.intercalate (coerce a) (foldr ((:) . coerce) [] b))
 
 -- | Pad a builder from the left side to the specified length with the specified character
@@ -249,7 +249,7 @@ padFromRight = coerce Dev.padFromRight
 -- Time interval in seconds.
 -- Directly applicable to 'DiffTime' and 'NominalDiffTime'.
 {-# INLINEABLE intervalInSeconds #-}
-intervalInSeconds :: RealFrac seconds => seconds -> Builder
+intervalInSeconds :: (RealFrac seconds) => seconds -> Builder
 intervalInSeconds = coerce . Dev.intervalInSeconds
 
 -- | Double with a fixed number of decimal places.

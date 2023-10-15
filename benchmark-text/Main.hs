@@ -8,17 +8,17 @@ import qualified Text.Builder as A
 import Prelude
 
 main =
-  defaultMain $
-    [ subjectBenchmark "builderSubject" builderSubject,
-      subjectBenchmark "lazyTextBuilderSubject" lazyTextBuilderSubject
-    ]
+  defaultMain
+    $ [ subjectBenchmark "builderSubject" builderSubject,
+        subjectBenchmark "lazyTextBuilderSubject" lazyTextBuilderSubject
+      ]
 
 subjectBenchmark :: String -> Subject -> Benchmark
 subjectBenchmark title subject =
-  bgroup title $
-    [ benchmark "Small input" smallSample subject,
-      benchmark "Large input" largeSample subject
-    ]
+  bgroup title
+    $ [ benchmark "Small input" smallSample subject,
+        benchmark "Large input" largeSample subject
+      ]
 
 benchmark :: String -> Sample -> Subject -> Benchmark
 benchmark title sample subject =
@@ -41,13 +41,17 @@ lazyTextBuilderSubject =
 {-# NOINLINE smallSample #-}
 smallSample :: Sample
 smallSample (Subject text (<>) mempty run) =
-  run $
-    text "abcd" <> (text "ABCD" <> text "Фываолдж") <> text "漢"
+  run
+    $ text "abcd"
+    <> (text "ABCD" <> text "Фываолдж")
+    <> text "漢"
 
 {-# NOINLINE largeSample #-}
 largeSample :: Sample
 largeSample (Subject text (<>) mempty run) =
-  run $
-    foldl' (<>) mempty $
-      replicate 100000 $
-        text "abcd" <> (text "ABCD" <> text "Фываолдж") <> text "漢"
+  run
+    $ foldl' (<>) mempty
+    $ replicate 100000
+    $ text "abcd"
+    <> (text "ABCD" <> text "Фываолдж")
+    <> text "漢"

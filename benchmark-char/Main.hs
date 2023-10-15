@@ -8,19 +8,19 @@ import qualified Text.Builder as A
 import Prelude
 
 main =
-  defaultMain $
-    [ subjectBenchmark "builderSubject" builderSubject,
-      subjectBenchmark "lazyTextBuilderSubject" lazyTextBuilderSubject,
-      subjectBenchmark "plainTextPackingSubject" plainTextPackingSubject
-    ]
+  defaultMain
+    $ [ subjectBenchmark "builderSubject" builderSubject,
+        subjectBenchmark "lazyTextBuilderSubject" lazyTextBuilderSubject,
+        subjectBenchmark "plainTextPackingSubject" plainTextPackingSubject
+      ]
 
 subjectBenchmark :: String -> Subject -> Benchmark
 subjectBenchmark title subject =
-  bgroup title $
-    [ benchmark "Small input" smallInput subject,
-      benchmark "Medium input" mediumInput subject,
-      benchmark "Large input" largeInput subject
-    ]
+  bgroup title
+    $ [ benchmark "Small input" smallInput subject,
+        benchmark "Medium input" mediumInput subject,
+        benchmark "Large input" largeInput subject
+      ]
 
 benchmark :: String -> [Int] -> Subject -> Benchmark
 benchmark title input subject =
