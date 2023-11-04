@@ -62,7 +62,7 @@ library
   other-modules:   Text.Builder.Prelude
   build-depends:
     , base >=4.11 && <5
-    , bytestring >=0.10 && <0.12
+    , bytestring >=0.10 && <0.13
     , text >=1.2 && <3
     , text-builder-dev >=0.3.4.1 && <0.4
 
