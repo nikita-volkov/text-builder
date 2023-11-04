@@ -1,6 +1,6 @@
 cabal-version: 3.0
 name:          text-builder
-version:       0.6.7.1
+version:       0.6.7.2
 category:      Text, Builders
 synopsis:      Efficient strict text builder
 description:   Text formatting library and efficient builder library.
