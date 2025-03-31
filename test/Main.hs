@@ -6,7 +6,7 @@ import qualified Data.Text.Encoding as Text
 import Test.Tasty
 import Test.Tasty.HUnit
 import Test.Tasty.QuickCheck
-import qualified Text.Builder as B
+import qualified TextBuilder as B
 import Prelude hiding (choose)
 
 main :: IO ()

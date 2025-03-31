@@ -3,7 +3,7 @@ module Main where
 import Criterion.Main
 import qualified Data.Text.Lazy as C
 import qualified Data.Text.Lazy.Builder as B
-import qualified Text.Builder as A
+import qualified TextBuilder as A
 import Prelude
 
 main :: IO ()
