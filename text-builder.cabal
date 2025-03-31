@@ -3,7 +3,10 @@ name: text-builder
 version: 0.6.7.3
 category: Text, Builders
 synopsis: Efficient strict text builder
-description: Text formatting and efficient builder library.
+description:
+  - Efficient monoidal builder of strict textual values
+  - Text formatting library, an alternative to `printf` or the "formatting" Haskell library
+
 homepage: https://github.com/nikita-volkov/text-builder
 bug-reports: https://github.com/nikita-volkov/text-builder/issues
 author: Nikita Volkov <nikita.y.volkov@mail.ru>

@@ -10,9 +10,9 @@ import Prelude
 main :: IO ()
 main =
   defaultMain
-    $ [ subjectBenchmark "builderSubject" builderSubject,
-        subjectBenchmark "lazyTextBuilderSubject" lazyTextBuilderSubject,
-        subjectBenchmark "plainTextPackingSubject" plainTextPackingSubject
+    $ [ subjectBenchmark "TextBuilder" builderSubject,
+        subjectBenchmark "Data.Text.Lazy.Builder" lazyTextBuilderSubject,
+        subjectBenchmark "Data.Text" plainTextPackingSubject
       ]
 
 subjectBenchmark :: String -> Subject -> Benchmark

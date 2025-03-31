@@ -9,8 +9,8 @@ import Prelude
 main :: IO ()
 main =
   defaultMain
-    $ [ subjectBenchmark "builderSubject" builderSubject,
-        subjectBenchmark "lazyTextBuilderSubject" lazyTextBuilderSubject
+    $ [ subjectBenchmark "TextBuilder" textBuilderSubject,
+        subjectBenchmark "Data.Text.Lazy.Builder" lazyTextBuilderSubject
       ]
 
 subjectBenchmark :: String -> Subject -> Benchmark
@@ -30,8 +30,8 @@ data Subject
 type Sample =
   Subject -> Text
 
-builderSubject :: Subject
-builderSubject =
+textBuilderSubject :: Subject
+textBuilderSubject =
   Subject A.text mappend mempty A.run
 
 lazyTextBuilderSubject :: Subject
@@ -42,9 +42,7 @@ lazyTextBuilderSubject =
 smallSample :: Sample
 smallSample (Subject text (<>) _ run) =
   run
-    $ text "abcd"
-    <> (text "ABCD" <> text "Фываолдж")
-    <> text "漢"
+    $ (text "abcd" <> (text "ABCD" <> text "Фываолдж") <> text "漢")
 
 {-# NOINLINE largeSample #-}
 largeSample :: Sample
@@ -52,6 +50,4 @@ largeSample (Subject text (<>) mempty run) =
   run
     $ foldl' (<>) mempty
     $ replicate 100000
-    $ text "abcd"
-    <> (text "ABCD" <> text "Фываолдж")
-    <> text "漢"
+    $ (text "abcd" <> (text "ABCD" <> text "Фываолдж") <> text "漢")
