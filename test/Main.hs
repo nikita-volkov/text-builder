@@ -6,7 +6,7 @@ import qualified Data.Text.Encoding as Text
 import Test.Tasty
 import Test.Tasty.HUnit
 import Test.Tasty.QuickCheck
-import qualified Text.Builder as B
+import qualified TextBuilder as B
 import Prelude hiding (choose)
 
 main :: IO ()
@@ -47,10 +47,10 @@ main =
           x >= 0 ==>
             (fromString . showHex x) "" === (B.run . B.hexadecimal) x,
         testCase "Separated thousands" $ do
-          assertEqual "" "0" (B.run (B.thousandSeparatedUnsignedDecimal ',' 0))
-          assertEqual "" "123" (B.run (B.thousandSeparatedUnsignedDecimal ',' 123))
-          assertEqual "" "1,234" (B.run (B.thousandSeparatedUnsignedDecimal ',' 1234))
-          assertEqual "" "1,234,567" (B.run (B.thousandSeparatedUnsignedDecimal ',' 1234567)),
+          assertEqual "" "0" (B.run (B.thousandSeparatedUnsignedDecimal @Int ',' 0))
+          assertEqual "" "123" (B.run (B.thousandSeparatedUnsignedDecimal @Int ',' 123))
+          assertEqual "" "1,234" (B.run (B.thousandSeparatedUnsignedDecimal @Int ',' 1234))
+          assertEqual "" "1,234,567" (B.run (B.thousandSeparatedUnsignedDecimal @Int ',' 1234567)),
         testCase "Pad from left" $ do
           assertEqual "" "00" (B.run (B.padFromLeft 2 '0' ""))
           assertEqual "" "00" (B.run (B.padFromLeft 2 '0' "0"))
@@ -65,22 +65,22 @@ main =
           assertEqual "" "123" (B.run (B.padFromRight 2 '0' "123"))
           assertEqual "" "1  " (B.run (B.padFromRight 3 ' ' "1")),
         testCase "Hexadecimal"
-          $ assertEqual "" "1f23" (B.run (B.hexadecimal 0x01f23)),
+          $ assertEqual "" "1f23" (B.run (B.hexadecimal @Int 0x01f23)),
         testCase "Negative Hexadecimal"
-          $ assertEqual "" "-1f23" (B.run (B.hexadecimal (-0x01f23))),
+          $ assertEqual "" "-1f23" (B.run (B.hexadecimal @Int (-0x01f23))),
         testGroup "Time interval"
-          $ [ testCase "59s" $ assertEqual "" "00:00:00:59" $ B.run $ B.intervalInSeconds 59,
-              testCase "minute" $ assertEqual "" "00:00:01:00" $ B.run $ B.intervalInSeconds 60,
-              testCase "90s" $ assertEqual "" "00:00:01:30" $ B.run $ B.intervalInSeconds 90,
-              testCase "hour" $ assertEqual "" "00:01:00:00" $ B.run $ B.intervalInSeconds 3600,
-              testCase "day" $ assertEqual "" "01:00:00:00" $ B.run $ B.intervalInSeconds 86400
+          $ [ testCase "59s" $ assertEqual "" "00:00:00:59" $ B.run $ B.intervalInSeconds @Rational 59,
+              testCase "minute" $ assertEqual "" "00:00:01:00" $ B.run $ B.intervalInSeconds @Rational 60,
+              testCase "90s" $ assertEqual "" "00:00:01:30" $ B.run $ B.intervalInSeconds @Rational 90,
+              testCase "hour" $ assertEqual "" "00:01:00:00" $ B.run $ B.intervalInSeconds @Rational 3600,
+              testCase "day" $ assertEqual "" "01:00:00:00" $ B.run $ B.intervalInSeconds @Rational 86400
             ],
         testCase "dataSizeInBytesInDecimal" $ do
-          assertEqual "" "999B" (B.run (B.dataSizeInBytesInDecimal ',' 999))
-          assertEqual "" "1kB" (B.run (B.dataSizeInBytesInDecimal ',' 1000))
-          assertEqual "" "1.1kB" (B.run (B.dataSizeInBytesInDecimal ',' 1100))
-          assertEqual "" "1.1MB" (B.run (B.dataSizeInBytesInDecimal ',' 1150000))
-          assertEqual "" "9.9MB" (B.run (B.dataSizeInBytesInDecimal ',' 9990000))
-          assertEqual "" "10MB" (B.run (B.dataSizeInBytesInDecimal ',' 10100000))
-          assertEqual "" "1,000YB" (B.run (B.dataSizeInBytesInDecimal ',' 1000000000000000000000000000))
+          assertEqual "" "999B" (B.run (B.dataSizeInBytesInDecimal @Int ',' 999))
+          assertEqual "" "1kB" (B.run (B.dataSizeInBytesInDecimal @Int ',' 1000))
+          assertEqual "" "1.1kB" (B.run (B.dataSizeInBytesInDecimal @Int ',' 1100))
+          assertEqual "" "1.1MB" (B.run (B.dataSizeInBytesInDecimal @Int ',' 1150000))
+          assertEqual "" "9.9MB" (B.run (B.dataSizeInBytesInDecimal @Int ',' 9990000))
+          assertEqual "" "10MB" (B.run (B.dataSizeInBytesInDecimal @Int ',' 10100000))
+          assertEqual "" "1,000YB" (B.run (B.dataSizeInBytesInDecimal @Integer ',' 1000000000000000000000000000))
       ]
