@@ -5,34 +5,84 @@
 
 # Performance
 
-The benchmarks show that it's 2-5 times faster than the lazy text builder supplied with the "text" package. In the years of existence of this package the collected user feedback proves the same.
+The benchmarks show that it's about 2 times faster than the lazy text builder supplied with the "text" package. In the years of existence of this package the collected user feedback proves that's faster in fact.
 
 ```
-benchmarking TextBuilder/Small input
-time                 137.4 ns   (136.0 ns .. 139.9 ns)
-                     0.998 R²   (0.995 R² .. 1.000 R²)
-mean                 137.3 ns   (136.0 ns .. 139.8 ns)
-std dev              5.664 ns   (1.587 ns .. 9.682 ns)
-variance introduced by outliers: 61% (severely inflated)
-
-benchmarking TextBuilder/Large input
-time                 6.799 ms   (6.772 ms .. 6.832 ms)
+benchmarking Left-biased mappend/1kB/TextBuilder
+time                 4.567 μs   (4.552 μs .. 4.584 μs)
                      1.000 R²   (1.000 R² .. 1.000 R²)
-mean                 6.768 ms   (6.743 ms .. 6.788 ms)
-std dev              68.99 μs   (56.84 μs .. 83.06 μs)
+mean                 4.570 μs   (4.551 μs .. 4.592 μs)
+std dev              64.42 ns   (49.19 ns .. 81.46 ns)
+variance introduced by outliers: 12% (moderately inflated)
 
-benchmarking Data.Text.Lazy.Builder/Small input
-time                 252.1 ns   (251.2 ns .. 253.4 ns)
+benchmarking Left-biased mappend/1kB/Data.Text.Lazy.Builder
+time                 8.855 μs   (8.805 μs .. 8.901 μs)
                      1.000 R²   (1.000 R² .. 1.000 R²)
-mean                 253.5 ns   (252.7 ns .. 254.5 ns)
-std dev              3.273 ns   (2.477 ns .. 4.225 ns)
+mean                 8.867 μs   (8.821 μs .. 8.908 μs)
+std dev              137.9 ns   (114.6 ns .. 160.4 ns)
 variance introduced by outliers: 13% (moderately inflated)
 
-benchmarking Data.Text.Lazy.Builder/Large input
-time                 35.77 ms   (35.04 ms .. 36.14 ms)
-                     0.999 R²   (0.998 R² .. 1.000 R²)
-mean                 35.94 ms   (35.51 ms .. 36.33 ms)
-std dev              805.3 μs   (628.5 μs .. 1.043 ms)
+benchmarking Left-biased mappend/1MB/TextBuilder
+time                 9.546 ms   (9.415 ms .. 9.773 ms)
+                     0.998 R²   (0.995 R² .. 1.000 R²)
+mean                 9.407 ms   (9.351 ms .. 9.493 ms)
+std dev              184.7 μs   (92.85 μs .. 333.3 μs)
+
+benchmarking Left-biased mappend/1MB/Data.Text.Lazy.Builder
+time                 17.04 ms   (16.85 ms .. 17.21 ms)
+                     0.999 R²   (0.999 R² .. 1.000 R²)
+mean                 17.09 ms   (16.99 ms .. 17.19 ms)
+std dev              228.4 μs   (181.4 μs .. 285.3 μs)
+
+benchmarking Right-biased mappend/1kB/TextBuilder
+time                 4.481 μs   (4.467 μs .. 4.499 μs)
+                     1.000 R²   (1.000 R² .. 1.000 R²)
+mean                 4.486 μs   (4.470 μs .. 4.508 μs)
+std dev              61.86 ns   (44.45 ns .. 87.66 ns)
+variance introduced by outliers: 11% (moderately inflated)
+
+benchmarking Right-biased mappend/1kB/Data.Text.Lazy.Builder
+time                 8.751 μs   (8.701 μs .. 8.798 μs)
+                     1.000 R²   (1.000 R² .. 1.000 R²)
+mean                 8.751 μs   (8.697 μs .. 8.805 μs)
+std dev              159.2 ns   (134.4 ns .. 205.0 ns)
+variance introduced by outliers: 17% (moderately inflated)
+
+benchmarking Right-biased mappend/1MB/TextBuilder
+time                 7.057 ms   (7.035 ms .. 7.086 ms)
+                     1.000 R²   (1.000 R² .. 1.000 R²)
+mean                 7.071 ms   (7.050 ms .. 7.093 ms)
+std dev              57.85 μs   (43.37 μs .. 83.06 μs)
+
+benchmarking Right-biased mappend/1MB/Data.Text.Lazy.Builder
+time                 15.10 ms   (14.96 ms .. 15.30 ms)
+                     0.999 R²   (0.999 R² .. 1.000 R²)
+mean                 15.15 ms   (15.04 ms .. 15.25 ms)
+std dev              273.0 μs   (208.6 μs .. 392.6 μs)
+
+benchmarking mconcat/1kB/TextBuilder
+time                 4.778 μs   (4.756 μs .. 4.800 μs)
+                     1.000 R²   (1.000 R² .. 1.000 R²)
+mean                 4.784 μs   (4.770 μs .. 4.802 μs)
+std dev              58.27 ns   (48.36 ns .. 72.11 ns)
+
+benchmarking mconcat/1kB/Data.Text.Lazy.Builder
+time                 8.046 μs   (8.009 μs .. 8.087 μs)
+                     1.000 R²   (1.000 R² .. 1.000 R²)
+mean                 8.053 μs   (8.021 μs .. 8.084 μs)
+std dev              102.3 ns   (81.50 ns .. 130.5 ns)
+
+benchmarking mconcat/1MB/TextBuilder
+time                 8.902 ms   (8.856 ms .. 8.931 ms)
+                     1.000 R²   (1.000 R² .. 1.000 R²)
+mean                 8.892 ms   (8.868 ms .. 8.926 ms)
+std dev              81.44 μs   (62.67 μs .. 119.7 μs)
+
+benchmarking mconcat/1MB/Data.Text.Lazy.Builder
+time                 10.56 ms   (10.39 ms .. 10.68 ms)
+                     0.999 R²   (0.998 R² .. 0.999 R²)
+mean                 10.50 ms   (10.42 ms .. 10.60 ms)
+std dev              260.2 μs   (191.2 μs .. 375.9 μs)
 ```
 
 # How it works
