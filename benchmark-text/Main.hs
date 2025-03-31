@@ -40,7 +40,7 @@ lazyTextBuilderSubject =
 
 {-# NOINLINE smallSample #-}
 smallSample :: Sample
-smallSample (Subject text (<>) mempty run) =
+smallSample (Subject text (<>) _ run) =
   run
     $ text "abcd"
     <> (text "ABCD" <> text "Фываолдж")
