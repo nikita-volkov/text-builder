@@ -47,6 +47,7 @@ common base
     MultiWayIf
     NoImplicitPrelude
     NoMonomorphismRestriction
+    NumericUnderscores
     OverloadedStrings
     ParallelListComp
     PatternGuards

@@ -9,45 +9,27 @@ import Prelude
 main :: IO ()
 main =
   defaultMain
-    $ [ subjectBenchmark "TextBuilder" textBuilderSubject,
-        subjectBenchmark "Data.Text.Lazy.Builder" lazyTextBuilderSubject
-      ]
+    [ bgroup
+        "< 1KB"
+        [ bench "TextBuilder" (nf (simulate 20) A.run),
+          bench "Data.Text.Lazy.Builder" (nf (simulate 20) (C.toStrict . B.toLazyText))
+        ],
+      bgroup
+        "< 1MB"
+        [ bench "TextBuilder" (nf (simulate 20_000) A.run),
+          bench "Data.Text.Lazy.Builder" (nf (simulate 20_000) (C.toStrict . B.toLazyText))
+        ],
+      bgroup
+        "< 1GB"
+        [ bench "TextBuilder" (nf (simulate 20_000_000) A.run),
+          bench "Data.Text.Lazy.Builder" (nf (simulate 20_000_000) (C.toStrict . B.toLazyText))
+        ]
+    ]
 
-subjectBenchmark :: String -> Subject -> Benchmark
-subjectBenchmark title subject =
-  bgroup title
-    $ [ benchmark "Small input" smallSample subject,
-        benchmark "Large input" largeSample subject
-      ]
-
-benchmark :: String -> Sample -> Subject -> Benchmark
-benchmark title sample subject =
-  bench title $ nf sample $ subject
-
-data Subject
-  = forall a. Subject (Text -> a) (a -> a -> a) a (a -> Text)
-
-type Sample =
-  Subject -> Text
-
-textBuilderSubject :: Subject
-textBuilderSubject =
-  Subject A.text mappend mempty A.run
-
-lazyTextBuilderSubject :: Subject
-lazyTextBuilderSubject =
-  Subject B.fromText mappend mempty (C.toStrict . B.toLazyText)
-
-{-# NOINLINE smallSample #-}
-smallSample :: Sample
-smallSample (Subject text (<>) _ run) =
-  run
-    $ (text "abcd" <> (text "ABCD" <> text "Фываолдж") <> text "漢")
-
-{-# NOINLINE largeSample #-}
-largeSample :: Sample
-largeSample (Subject text (<>) mempty run) =
-  run
-    $ foldl' (<>) mempty
-    $ replicate 100000
-    $ (text "abcd" <> (text "ABCD" <> text "Фываолдж") <> text "漢")
+{-# NOINLINE simulate #-}
+simulate :: (Monoid a, IsString a) => Int -> (a -> Text) -> Text
+simulate repetitions compile =
+  ("abcd" <> ("ABCD" <> "Фываолдж") <> "漢")
+    & replicate repetitions
+    & mconcat
+    & compile
