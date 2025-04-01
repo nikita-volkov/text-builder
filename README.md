@@ -5,7 +5,7 @@
 
 # Performance
 
-The benchmarks show that it's about 2 times faster than the lazy text builder supplied with the "text" package. In the years of existence of this package the collected user feedback proves that's faster in fact.
+The benchmarks show that it's about 2 times faster than the lazy text builder supplied with the "text" package. In the years of existence of this package the collected user feedback proves that it's faster in fact.
 
 ```
 benchmarking Left-biased mappend/1kB/TextBuilder
