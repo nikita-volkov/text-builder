@@ -3,6 +3,7 @@ module TextBuilder
     Builder,
 
     -- * Accessors
+    toText,
     run,
     length,
     null,
@@ -95,8 +96,14 @@ null :: TextBuilder -> Bool
 null = coerce Dev.null
 
 -- | Execute a builder producing a strict text
+toText :: TextBuilder -> Text
+toText = coerce Dev.toText
+
+{-# DEPRECATED run "Use toText instead" #-}
+
+-- | Alias to 'toText'
 run :: TextBuilder -> Text
-run = coerce Dev.buildText
+run = toText
 
 -- ** Output IO
 
