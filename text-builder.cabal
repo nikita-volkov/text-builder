@@ -1,6 +1,6 @@
 cabal-version: 3.0
 name: text-builder
-version: 0.6.9
+version: 0.6.10
 category: Text, Builders
 synopsis: Efficient strict text builder
 description:
@@ -76,7 +76,7 @@ library
     base >=4.11 && <5,
     bytestring >=0.10 && <0.13,
     text >=1.2 && <3,
-    text-builder-dev >=0.3.9.1 && <0.4,
+    text-builder-dev >=0.3.10 && <0.4,
 
 test-suite test
   import: base

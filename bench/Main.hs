@@ -21,13 +21,13 @@ main =
          in [ bgroup
                 "1kB"
                 let sample = sampleBySize 100
-                 in [ bench "TextBuilder" (nf sample A.run),
+                 in [ bench "TextBuilder" (nf sample A.toText),
                       bench "Data.Text.Lazy.Builder" (nf sample (C.toStrict . B.toLazyText))
                     ],
               bgroup
                 "1MB"
                 let sample = sampleBySize 100_000
-                 in [ bench "TextBuilder" (nf sample A.run),
+                 in [ bench "TextBuilder" (nf sample A.toText),
                       bench "Data.Text.Lazy.Builder" (nf sample (C.toStrict . B.toLazyText))
                     ]
             ],
@@ -43,13 +43,13 @@ main =
          in [ bgroup
                 "1kB"
                 let sample = sampleBySize 100
-                 in [ bench "TextBuilder" (nf sample A.run),
+                 in [ bench "TextBuilder" (nf sample A.toText),
                       bench "Data.Text.Lazy.Builder" (nf sample (C.toStrict . B.toLazyText))
                     ],
               bgroup
                 "1MB"
                 let sample = sampleBySize 100_000
-                 in [ bench "TextBuilder" (nf sample A.run),
+                 in [ bench "TextBuilder" (nf sample A.toText),
                       bench "Data.Text.Lazy.Builder" (nf sample (C.toStrict . B.toLazyText))
                     ]
             ],
@@ -65,13 +65,13 @@ main =
          in [ bgroup
                 "1kB"
                 let sample = sampleBySize 100
-                 in [ bench "TextBuilder" (nf sample A.run),
+                 in [ bench "TextBuilder" (nf sample A.toText),
                       bench "Data.Text.Lazy.Builder" (nf sample (C.toStrict . B.toLazyText))
                     ],
               bgroup
                 "1MB"
                 let sample = sampleBySize 100_000
-                 in [ bench "TextBuilder" (nf sample A.run),
+                 in [ bench "TextBuilder" (nf sample A.toText),
                       bench "Data.Text.Lazy.Builder" (nf sample (C.toStrict . B.toLazyText))
                     ]
             ]
