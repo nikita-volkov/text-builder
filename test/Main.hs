@@ -1,86 +1,122 @@
 module Main where
 
 import qualified Data.ByteString as ByteString
-import qualified Data.Text as A
+import Data.Char (intToDigit)
+import Data.Int
+import Data.Proxy
+import Data.String
+import qualified Data.Text as Text
 import qualified Data.Text.Encoding as Text
+import Data.Word
+import Numeric
+import Numeric.Natural (Natural)
+import Test.QuickCheck.Classes
+import Test.QuickCheck.Instances ()
 import Test.Tasty
-import Test.Tasty.HUnit
 import Test.Tasty.QuickCheck
-import qualified TextBuilder as B
-import Prelude hiding (choose)
+import TextBuilder
+import Util.ExtraInstances ()
+import Util.TestTrees
+import Prelude
 
 main :: IO ()
-main =
-  defaultMain
-    $ testGroup "All tests"
-    $ [ testProperty "ASCII ByteString"
-          $ let gen = listOf $ do
-                  list <- listOf (choose (0, 127))
-                  return (ByteString.pack list)
-             in forAll gen $ \chunks ->
-                  mconcat chunks
-                    === Text.encodeUtf8 (B.toText (foldMap B.asciiByteString chunks)),
-        testProperty "Intercalation has the same effect as in Text"
-          $ \separator texts ->
-            A.intercalate separator texts
-              === B.toText (B.intercalate (B.text separator) (fmap B.text texts)),
-        testProperty "Packing a list of chars is isomorphic to appending a list of builders"
-          $ \chars ->
-            A.pack chars
-              === B.toText (foldMap B.char chars),
-        testProperty "Concatting a list of texts is isomorphic to fold-mapping with builders"
-          $ \texts ->
-            mconcat texts
-              === B.toText (foldMap B.text texts),
-        testProperty "Concatting a list of texts is isomorphic to concatting a list of builders"
-          $ \texts ->
-            mconcat texts
-              === B.toText (mconcat (map B.text texts)),
-        testProperty "Concatting a list of trimmed texts is isomorphic to concatting a list of builders"
-          $ \texts ->
-            let trimmedTexts = fmap (A.drop 3) texts
-             in mconcat trimmedTexts
-                  === B.toText (mconcat (map B.text trimmedTexts)),
-        testProperty "Decimal" $ \(x :: Integer) ->
-          (fromString . show) x === (B.toText (B.decimal x)),
-        testProperty "Hexadecimal vs std show" $ \(x :: Integer) ->
-          x >= 0 ==>
-            (fromString . showHex x) "" === (B.toText . B.hexadecimal) x,
-        testCase "Separated thousands" $ do
-          assertEqual "" "0" (B.toText (B.thousandSeparatedUnsignedDecimal @Int ',' 0))
-          assertEqual "" "123" (B.toText (B.thousandSeparatedUnsignedDecimal @Int ',' 123))
-          assertEqual "" "1,234" (B.toText (B.thousandSeparatedUnsignedDecimal @Int ',' 1234))
-          assertEqual "" "1,234,567" (B.toText (B.thousandSeparatedUnsignedDecimal @Int ',' 1234567)),
-        testCase "Pad from left" $ do
-          assertEqual "" "00" (B.toText (B.padFromLeft 2 '0' ""))
-          assertEqual "" "00" (B.toText (B.padFromLeft 2 '0' "0"))
-          assertEqual "" "01" (B.toText (B.padFromLeft 2 '0' "1"))
-          assertEqual "" "12" (B.toText (B.padFromLeft 2 '0' "12"))
-          assertEqual "" "123" (B.toText (B.padFromLeft 2 '0' "123")),
-        testCase "Pad from right" $ do
-          assertEqual "" "00" (B.toText (B.padFromRight 2 '0' ""))
-          assertEqual "" "00" (B.toText (B.padFromRight 2 '0' "0"))
-          assertEqual "" "10" (B.toText (B.padFromRight 2 '0' "1"))
-          assertEqual "" "12" (B.toText (B.padFromRight 2 '0' "12"))
-          assertEqual "" "123" (B.toText (B.padFromRight 2 '0' "123"))
-          assertEqual "" "1  " (B.toText (B.padFromRight 3 ' ' "1")),
-        testCase "Hexadecimal"
-          $ assertEqual "" "1f23" (B.toText (B.hexadecimal @Int 0x01f23)),
-        testCase "Negative Hexadecimal"
-          $ assertEqual "" "-1f23" (B.toText (B.hexadecimal @Int (-0x01f23))),
-        testGroup "Time interval"
-          $ [ testCase "59s" $ assertEqual "" "00:00:00:59" $ B.toText $ B.intervalInSeconds @Rational 59,
-              testCase "minute" $ assertEqual "" "00:00:01:00" $ B.toText $ B.intervalInSeconds @Rational 60,
-              testCase "90s" $ assertEqual "" "00:00:01:30" $ B.toText $ B.intervalInSeconds @Rational 90,
-              testCase "hour" $ assertEqual "" "00:01:00:00" $ B.toText $ B.intervalInSeconds @Rational 3600,
-              testCase "day" $ assertEqual "" "01:00:00:00" $ B.toText $ B.intervalInSeconds @Rational 86400
-            ],
-        testCase "dataSizeInBytesInDecimal" $ do
-          assertEqual "" "999B" (B.toText (B.dataSizeInBytesInDecimal @Int ',' 999))
-          assertEqual "" "1kB" (B.toText (B.dataSizeInBytesInDecimal @Int ',' 1000))
-          assertEqual "" "1.1kB" (B.toText (B.dataSizeInBytesInDecimal @Int ',' 1100))
-          assertEqual "" "1.1MB" (B.toText (B.dataSizeInBytesInDecimal @Int ',' 1150000))
-          assertEqual "" "9.9MB" (B.toText (B.dataSizeInBytesInDecimal @Int ',' 9990000))
-          assertEqual "" "10MB" (B.toText (B.dataSizeInBytesInDecimal @Int ',' 10100000))
-          assertEqual "" "1,000YB" (B.toText (B.dataSizeInBytesInDecimal @Integer ',' 1000000000000000000000000000))
+main = (defaultMain . testGroup "All") tests
+
+tests :: [TestTree]
+tests =
+  [ testGroup "Instances" $
+      [ followsLaws $ showLaws (Proxy @TextBuilder),
+        followsLaws $ eqLaws (Proxy @TextBuilder),
+        followsLaws $ semigroupLaws (Proxy @TextBuilder),
+        followsLaws $ monoidLaws (Proxy @TextBuilder)
+      ],
+    testGroup "Functions" $
+      [ testGroup "decimal" $
+          [ testGroup "Int" $
+              [ mapsToMonoid @Int decimal
+              ],
+            testGroup "Integer" $
+              [ mapsToMonoid @Integer decimal,
+                testProperty "Encodes the same as show" $ \(x :: Integer) ->
+                  (fromString . show) x === (toText (decimal x))
+              ]
+          ],
+        testGroup "fixedLengthDecimal" $
+          [ testGroup "Word" $
+              [ mapsToMonoid @Word (fixedLengthDecimal 42)
+              ],
+            testGroup "Natural" $
+              [ mapsToMonoid @Natural (fixedLengthDecimal 42),
+                testProperty "Encodes the same as printf" $ \(size :: Word8, val :: Natural) ->
+                  let rendered = show val
+                      renderedLength = length rendered
+                      intSize = fromIntegral size
+                      padded =
+                        if renderedLength > intSize
+                          then drop (renderedLength - intSize) rendered
+                          else replicate (intSize - renderedLength) '0' <> rendered
+                   in fromString padded
+                        === toText (fixedLengthDecimal (fromIntegral size) val)
+              ]
+          ],
+        testGroup "thousandSeparatedDecimal" $
+          [ testGroup "Int" $
+              [ mapsToMonoid @Int (thousandSeparatedDecimal ',')
+              ],
+            testGroup "Integer" $
+              [ mapsToMonoid @Integer (thousandSeparatedDecimal ',')
+              ]
+          ],
+        testGroup "binary" $
+          [ testGroup "Int" $
+              [ mapsToMonoid @Int binary,
+                testProperty "Encodes the same as showIntAtBase" $ \(x :: Word32) ->
+                  (Text.justifyRight 32 '0' . Text.pack . showIntAtBase 2 intToDigit x) "" === toText (binary x)
+              ]
+          ],
+        testGroup "octal" $
+          [ testGroup "Int" $
+              [ mapsToMonoid @Int octal,
+                testProperty "Encodes the same as showIntAtBase" $ \(x :: Word32) ->
+                  (Text.justifyRight 11 '0' . Text.pack . showIntAtBase 8 intToDigit x) "" === toText (octal x)
+              ]
+          ],
+        testGroup "hexadecimal" $
+          [ testGroup "Int" $
+              [ mapsToMonoid @Int hexadecimal,
+                testProperty "Encodes the same as showHex" $ \(x :: Word32) ->
+                  (Text.justifyRight 8 '0' . Text.pack . showHex x) "" === toText (hexadecimal x)
+              ]
+          ],
+        testGroup "unsafeUtf8ByteString" $
+          [ mapsToMonoid (unsafeUtf8ByteString . Text.encodeUtf8),
+            testProperty "Works on ASCII" $
+              let gen = listOf do
+                    list <- listOf (choose (0, 127))
+                    return (ByteString.pack list)
+               in forAll gen \chunks ->
+                    mconcat chunks
+                      === Text.encodeUtf8 (toText (foldMap unsafeUtf8ByteString chunks))
+          ],
+        testGroup "intercalate" $
+          [ customGenMonoid do
+              sep <- arbitrary
+              texts <- listOf arbitrary
+              return (intercalate (text sep) (fmap text texts)),
+            testProperty "Has the same effect as in Text" $
+              \separator texts ->
+                Text.intercalate separator texts
+                  === toText (intercalate (text separator) (fmap text texts))
+          ],
+        testGroup "intercalateMap" $
+          [ customGenMonoid do
+              sep <- arbitrary
+              texts <- listOf arbitrary
+              return (intercalateMap (text sep) text texts),
+            testProperty "intercalateMap sep mapper == intercalate sep . fmap mapper" $
+              \separator ints ->
+                Text.intercalate separator (fmap (fromString . show @Int) ints)
+                  === toText (intercalateMap (text separator) decimal ints)
+          ]
       ]
+  ]

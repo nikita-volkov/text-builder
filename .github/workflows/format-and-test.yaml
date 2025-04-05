@@ -1,3 +1,5 @@
+name: Format and test
+
 on:
   push:
     branches:
@@ -11,41 +13,52 @@ concurrency:
 
 jobs:
   format:
-    uses: nikita-volkov/haskell-hackage-lib-github-actions-workflows/.github/workflows/format.yaml@v3
+    uses: nikita-volkov/haskell-hackage-lib-github-actions-workflows/.github/workflows/format.yaml@v4
+    secrets: inherit
+  
+  check-cabal:
+    uses: nikita-volkov/haskell-hackage-lib-github-actions-workflows/.github/workflows/check-cabal.yaml@v4
     secrets: inherit
 
-  build-ghc-8-8:
-    uses: nikita-volkov/check-haskell-fast.github-actions-workflow/.github/workflows/main.yaml@v2
+  generate-docs:
+    uses: nikita-volkov/haskell-hackage-lib-github-actions-workflows/.github/workflows/generate-docs.yaml@v4
+    secrets: inherit
+
+  build-with-ghc-8-8:
+    uses: nikita-volkov/haskell-hackage-lib-github-actions-workflows/.github/workflows/build.yaml@v4
     secrets: inherit
     with:
       ghc: "8.8.1"
       skip-doctest: true
       skip-benchmarks: true
-      skip-cabal-check: true
-      skip-haddock: true
+      test-options: >
+        --quickcheck-tests 10_000
   
-  build-ghc-9-4-and-text-1-2:
-    uses: nikita-volkov/check-haskell-fast.github-actions-workflow/.github/workflows/main.yaml@v2
+  build-with-ghc-9-4-and-text-1-2:
+    uses: nikita-volkov/haskell-hackage-lib-github-actions-workflows/.github/workflows/build.yaml@v4
     secrets: inherit
     with:
       ghc: "9.4"
       cabal-configure-extra-args: >
         --constraint="text==1.2.5.0"
       skip-benchmarks: true
-      skip-cabal-check: true
-      skip-haddock: true
+      test-options: >
+        --quickcheck-tests 10_000
   
-  build-ghc-9-4-and-text-2-0-2:
-    uses: nikita-volkov/check-haskell-fast.github-actions-workflow/.github/workflows/main.yaml@v2
+  build-with-ghc-9-4-and-text-2-0-2:
+    uses: nikita-volkov/haskell-hackage-lib-github-actions-workflows/.github/workflows/build.yaml@v4
     secrets: inherit
     with:
       ghc: "9.4"
       cabal-configure-extra-args: >
         --constraint="text==2.0.2"
       skip-benchmarks: true
-      skip-cabal-check: true
-      skip-haddock: true
+      test-options: >
+        --quickcheck-tests 10_000
   
-  build-latest:
-    uses: nikita-volkov/check-haskell-fast.github-actions-workflow/.github/workflows/main.yaml@v2
+  build-with-latest:
+    uses: nikita-volkov/haskell-hackage-lib-github-actions-workflows/.github/workflows/build.yaml@v4
     secrets: inherit
+    with:
+      test-options: >
+        --quickcheck-tests 10_000

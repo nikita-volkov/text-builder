@@ -13,6 +13,10 @@ import Control.Monad.Fix as Exports hiding (fix)
 import Control.Monad.IO.Class as Exports
 import Control.Monad.ST as Exports
 import Control.Monad.ST.Unsafe as Exports
+import Control.Monad.Trans.Class as Exports
+import Control.Monad.Trans.Maybe as Exports hiding (liftListen, liftPass)
+import Control.Monad.Trans.Reader as Exports hiding (liftCallCC, liftCatch)
+import Control.Monad.Trans.State.Strict as Exports hiding (liftCallCC, liftCatch, liftListen, liftPass)
 import Data.Bits as Exports
 import Data.Bool as Exports
 import Data.ByteString as Exports (ByteString)
@@ -40,6 +44,7 @@ import Data.STRef as Exports
 import Data.Semigroup as Exports
 import Data.String as Exports
 import Data.Text as Exports (Text)
+import Data.Time as Exports
 import Data.Traversable as Exports
 import Data.Tuple as Exports
 import Data.Unique as Exports
@@ -56,6 +61,7 @@ import GHC.Exts as Exports (groupWith, inline, lazy, sortWith)
 import GHC.Generics as Exports (Generic)
 import GHC.IO.Exception as Exports
 import Numeric as Exports
+import Numeric.Natural as Exports (Natural)
 import System.Environment as Exports
 import System.Exit as Exports
 import System.IO as Exports
