@@ -13,19 +13,13 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  format-and-test:
+    uses: ./.github/workflows/format-and-test.yaml
+    secrets: inherit
 
-  format:
-    uses: nikita-volkov/haskell-hackage-lib-github-actions-workflows/.github/workflows/format.yaml@v3
-    secrets: inherit
-  
-  check:
-    uses: ./.github/workflows/check.yaml
-    secrets: inherit
-  
   release:
     needs:
-      - format
-      - check
+      - format-and-test
     uses: nikita-volkov/haskell-hackage-lib-github-actions-workflows/.github/workflows/release.yaml@v3
     secrets: inherit
     with:

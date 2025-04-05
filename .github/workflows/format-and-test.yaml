@@ -1,0 +1,51 @@
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+  workflow_call: 
+
+concurrency:
+  group: format-and-test
+  cancel-in-progress: true
+
+jobs:
+  format:
+    uses: nikita-volkov/haskell-hackage-lib-github-actions-workflows/.github/workflows/format.yaml@v3
+    secrets: inherit
+
+  build-ghc-8-8:
+    uses: nikita-volkov/check-haskell-fast.github-actions-workflow/.github/workflows/main.yaml@v2
+    secrets: inherit
+    with:
+      ghc: "8.8.1"
+      skip-doctest: true
+      skip-benchmarks: true
+      skip-cabal-check: true
+      skip-haddock: true
+  
+  build-ghc-9-4-and-text-1-2:
+    uses: nikita-volkov/check-haskell-fast.github-actions-workflow/.github/workflows/main.yaml@v2
+    secrets: inherit
+    with:
+      ghc: "9.4"
+      cabal-configure-extra-args: >
+        --constraint="text==1.2.5.0"
+      skip-benchmarks: true
+      skip-cabal-check: true
+      skip-haddock: true
+  
+  build-ghc-9-4-and-text-2-0-2:
+    uses: nikita-volkov/check-haskell-fast.github-actions-workflow/.github/workflows/main.yaml@v2
+    secrets: inherit
+    with:
+      ghc: "9.4"
+      cabal-configure-extra-args: >
+        --constraint="text==2.0.2"
+      skip-benchmarks: true
+      skip-cabal-check: true
+      skip-haddock: true
+  
+  build-latest:
+    uses: nikita-volkov/check-haskell-fast.github-actions-workflow/.github/workflows/main.yaml@v2
+    secrets: inherit
