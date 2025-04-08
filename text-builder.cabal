@@ -10,9 +10,9 @@ description:
 
   == The Builder
 
-  The builder abstraction provided by the library is much faster than the standard @Data.Text.Lazy.Builder.'Data.Text.Lazy.Builder.Builder'@ and even the recently introduced @Data.Text.Encoding.'Data.Text.Encoding.StrictTextBuilder'@. Benchmarks are distributed with the source code. You can see the results in the README file.
+  The builder abstraction provided by this library is much faster than the standard lazy @Builder@ and even the recently introduced @StrictTextBuilder@ from \"text\". Benchmarks are distributed with the source code. You can see the results in the README file.
 
-  It constructs text in two phases. In the first one it estimates the size of the byte array and in the second one it allocates it once and populates it in one go.
+  The abstraction constructs text in two phases. In the first one it estimates the size of the byte array and in the second one it allocates it once and populates it in one go.
 
   == Simple and type-safe formatting library
 
