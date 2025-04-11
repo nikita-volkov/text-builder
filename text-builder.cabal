@@ -26,6 +26,8 @@ description:
 
   Following is a list of libraries that, alongside this one, make an integrated ecosystem:
 
+  - "[text-builder-time](https://hackage.haskell.org/package/text-builder-time)" - formatters for the "time" library
+
   - "[text-builder-core](https://hackage.haskell.org/package/text-builder-core)" - lower-level unsafe constructs for implementing efficient formatters compatible with this library
 
   - "[text-builder-dev](https://hackage.haskell.org/package/text-builder-dev)" - edge of development of new features providing a richer functionality at the cost of more frequent major releases
