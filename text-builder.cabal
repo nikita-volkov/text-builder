@@ -1,6 +1,6 @@
 cabal-version: 3.0
 name: text-builder
-version: 1.0.0.1
+version: 1.0.0.2
 category: Text, Builders
 synopsis: Efficient and flexible strict text builder
 description:
@@ -25,6 +25,8 @@ description:
   = Ecosystem
 
   Following is a list of libraries that, alongside this one, make an integrated ecosystem:
+
+  - "[text-builder-time](https://hackage.haskell.org/package/text-builder-time)" - formatters for the "time" library
 
   - "[text-builder-core](https://hackage.haskell.org/package/text-builder-core)" - lower-level unsafe constructs for implementing efficient formatters compatible with this library
 
