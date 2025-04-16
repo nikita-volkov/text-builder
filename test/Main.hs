@@ -83,10 +83,19 @@ tests =
           ],
         testGroup "thousandSeparatedDecimal" $
           [ testGroup "Int" $
-              [ mapsToMonoid @Int (thousandSeparatedDecimal ',')
+              [ mapsToMonoid @Int (thousandSeparatedDecimal ','),
+                testProperty "Encodes the same as show" $ \(x :: Int) ->
+                  (fromString . show) x === Text.filter (/= ',') (toText (thousandSeparatedDecimal ',' x))
+              ],
+            testGroup "Int8" $
+              [ mapsToMonoid @Int8 (thousandSeparatedDecimal ','),
+                testProperty "Encodes the same as show" $ \(x :: Int8) ->
+                  (fromString . show) x === Text.filter (/= ',') (toText (thousandSeparatedDecimal ',' x))
               ],
             testGroup "Integer" $
-              [ mapsToMonoid @Integer (thousandSeparatedDecimal ',')
+              [ mapsToMonoid @Integer (thousandSeparatedDecimal ','),
+                testProperty "Encodes the same as show" $ \(x :: Integer) ->
+                  (fromString . show) x === Text.filter (/= ',') (toText (thousandSeparatedDecimal ',' x))
               ]
           ],
         testGroup "binary" $

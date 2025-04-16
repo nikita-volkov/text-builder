@@ -174,15 +174,15 @@ decimal :: (Integral a) => a -> TextBuilder
 decimal a =
   if a >= 0
     then unsignedDecimal a
-    else 
+    else
       let negated = negate a
-      in if negated /= a
-        then unicodeCodepoint 45 <> unsignedDecimal negated
-        else 
-          -- This is a special case for the minimum value of signed types.
-          -- The negation of the minimum value is not representable in the same type.
-          -- For example, for Int8, -128 is not representable as a positive number.
-          unicodeCodepoint 45 <> unsignedDecimal (negate (fromIntegral a :: Integer))
+       in if negated /= a
+            then unicodeCodepoint 45 <> unsignedDecimal negated
+            else
+              -- This is a special case for the minimum value of signed types.
+              -- The negation of the minimum value is not representable in the same type.
+              -- For example, for Int8, -128 is not representable as a positive number.
+              unicodeCodepoint 45 <> unsignedDecimal (negate (fromIntegral a :: Integer))
 
 -- * Unsigned Numbers
 
@@ -312,8 +312,18 @@ fixedLengthDecimal (max 0 -> size) (abs -> val) =
 -- "-1 234 567 890"
 {-# INLINEABLE thousandSeparatedDecimal #-}
 thousandSeparatedDecimal :: (Integral a) => Char -> a -> TextBuilder
-thousandSeparatedDecimal separatorChar =
-  signed (unsignedThousandSeparatedDecimal separatorChar)
+thousandSeparatedDecimal separatorChar a =
+  if a >= 0
+    then unsignedThousandSeparatedDecimal separatorChar a
+    else
+      let negated = negate a
+       in if negated /= a
+            then unicodeCodepoint 45 <> unsignedThousandSeparatedDecimal separatorChar negated
+            else
+              -- This is a special case for the minimum value of signed types.
+              -- The negation of the minimum value is not representable in the same type.
+              -- For example, for Int8, -128 is not representable as a positive number.
+              unicodeCodepoint 45 <> unsignedThousandSeparatedDecimal separatorChar (negate (fromIntegral a :: Integer))
 
 -- | Decimal representation of an unsigned integral value with thousands separated by the specified character.
 --
