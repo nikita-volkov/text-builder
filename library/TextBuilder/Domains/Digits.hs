@@ -171,7 +171,18 @@ signed onUnsigned i =
 -- "-128"
 {-# INLINEABLE decimal #-}
 decimal :: (Integral a) => a -> TextBuilder
-decimal = signed unsignedDecimal
+decimal a =
+  if a >= 0
+    then unsignedDecimal a
+    else 
+      let negated = negate a
+      in if negated /= a
+        then unicodeCodepoint 45 <> unsignedDecimal negated
+        else 
+          -- This is a special case for the minimum value of signed types.
+          -- The negation of the minimum value is not representable in the same type.
+          -- For example, for Int8, -128 is not representable as a positive number.
+          unicodeCodepoint 45 <> unsignedDecimal (negate (fromIntegral a :: Integer))
 
 -- * Unsigned Numbers
 
