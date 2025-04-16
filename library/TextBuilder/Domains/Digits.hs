@@ -163,6 +163,12 @@ signed onUnsigned i =
 --
 -- >>> decimal 0
 -- "0"
+--
+-- >>> decimal (-2 :: Int8)
+-- "-2"
+--
+-- >>> decimal (-128 :: Int8)
+-- "-128"
 {-# INLINEABLE decimal #-}
 decimal :: (Integral a) => a -> TextBuilder
 decimal = signed unsignedDecimal
