@@ -147,11 +147,20 @@ prefixedHexadecimal = mappend "0x" . hexadecimal
 -- * Signed Numbers
 
 {-# INLINE signed #-}
-signed :: (Ord a, Num a) => (a -> TextBuilder) -> a -> TextBuilder
-signed onUnsigned i =
-  if i >= 0
-    then onUnsigned i
-    else unicodeCodepoint 45 <> onUnsigned (negate i)
+signed :: (Integral a) => (forall a. (Integral a) => a -> TextBuilder) -> a -> TextBuilder
+signed onUnsigned a =
+  if a >= 0
+    then onUnsigned a
+    else
+      unicodeCodepoint 45
+        <> let negated = negate a
+            in if negated /= a
+                 then onUnsigned negated
+                 else
+                   -- This is a special case for the minimum value of signed types.
+                   -- The negation of the minimum value is not representable in the same type.
+                   -- For example, for Int8, -128 is not representable as a positive number.
+                   onUnsigned (negate (fromIntegral a :: Integer))
 
 -- | Signed decimal representation of an integer.
 --
@@ -163,7 +172,13 @@ signed onUnsigned i =
 --
 -- >>> decimal 0
 -- "0"
-{-# INLINEABLE decimal #-}
+--
+-- >>> decimal (-2 :: Int8)
+-- "-2"
+--
+-- >>> decimal (-128 :: Int8)
+-- "-128"
+{-# INLINE decimal #-}
 decimal :: (Integral a) => a -> TextBuilder
 decimal = signed unsignedDecimal
 
