@@ -33,12 +33,34 @@ tests =
     testGroup "Functions" $
       [ testGroup "decimal" $
           [ testGroup "Int" $
-              [ mapsToMonoid @Int decimal
+              [ mapsToMonoid @Int decimal,
+                testProperty "Encodes the same as show" $ \(x :: Int) ->
+                  (fromString . show) x === toText (decimal x)
+              ],
+            testGroup "Int8" $
+              [ mapsToMonoid @Int8 decimal,
+                testProperty "Encodes the same as show" $ \(x :: Int8) ->
+                  (fromString . show) x === toText (decimal x)
+              ],
+            testGroup "Word" $
+              [ mapsToMonoid @Word decimal,
+                testProperty "Encodes the same as show" $ \(x :: Word) ->
+                  (fromString . show) x === toText (decimal x)
+              ],
+            testGroup "Word8" $
+              [ mapsToMonoid @Word8 decimal,
+                testProperty "Encodes the same as show" $ \(x :: Word8) ->
+                  (fromString . show) x === toText (decimal x)
               ],
             testGroup "Integer" $
               [ mapsToMonoid @Integer decimal,
                 testProperty "Encodes the same as show" $ \(x :: Integer) ->
-                  (fromString . show) x === (toText (decimal x))
+                  (fromString . show) x === toText (decimal x)
+              ],
+            testGroup "Natural" $
+              [ mapsToMonoid @Natural decimal,
+                testProperty "Encodes the same as show" $ \(x :: Natural) ->
+                  (fromString . show) x === toText (decimal x)
               ]
           ],
         testGroup "fixedLengthDecimal" $
@@ -61,10 +83,19 @@ tests =
           ],
         testGroup "thousandSeparatedDecimal" $
           [ testGroup "Int" $
-              [ mapsToMonoid @Int (thousandSeparatedDecimal ',')
+              [ mapsToMonoid @Int (thousandSeparatedDecimal ','),
+                testProperty "Encodes the same as show" $ \(x :: Int) ->
+                  (fromString . show) x === Text.filter (/= ',') (toText (thousandSeparatedDecimal ',' x))
+              ],
+            testGroup "Int8" $
+              [ mapsToMonoid @Int8 (thousandSeparatedDecimal ','),
+                testProperty "Encodes the same as show" $ \(x :: Int8) ->
+                  (fromString . show) x === Text.filter (/= ',') (toText (thousandSeparatedDecimal ',' x))
               ],
             testGroup "Integer" $
-              [ mapsToMonoid @Integer (thousandSeparatedDecimal ',')
+              [ mapsToMonoid @Integer (thousandSeparatedDecimal ','),
+                testProperty "Encodes the same as show" $ \(x :: Integer) ->
+                  (fromString . show) x === Text.filter (/= ',') (toText (thousandSeparatedDecimal ',' x))
               ]
           ],
         testGroup "binary" $
