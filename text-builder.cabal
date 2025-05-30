@@ -32,7 +32,7 @@ description:
 
   - "[text-builder-dev](https://hackage.haskell.org/package/text-builder-dev)" - edge of development of new features providing a richer functionality at the cost of more frequent major releases
 
-  - "[text-builder-lawful-conversions](https://hackage.haskell.org/package/text-builder-lawful-conversions)" - integration with the \"lawful-conversions\" library, providing bidirectional conversions with various types including `String`, `Data.Text.Text`, `Data.Text.Lazy.Text`, `Data.Text.Lazy.Builder.Builder`, `Data.Text.Encoding.StrictTextBuilder`.
+  - "[text-builder-lawful-conversions](https://hackage.haskell.org/package/text-builder-lawful-conversions)" - integration with the \"lawful-conversions\" library, providing bidirectional conversions with various textual and builder types.
 
 homepage: https://github.com/nikita-volkov/text-builder
 bug-reports: https://github.com/nikita-volkov/text-builder/issues
