@@ -150,7 +150,7 @@ benchmark bench
   main-is: Main.hs
   build-depends:
     base >=4.11 && <5,
-    tasty-bench ^>=0.4.1,
+    tasty-bench ^>=0.5,
     text >=2.1.2 && <3,
     text-builder,
     text-builder-linear ^>=0.1.3,
