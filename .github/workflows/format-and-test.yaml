@@ -39,6 +39,8 @@ jobs:
     secrets: inherit
     with:
       ghc: "9.4"
+      ghc-options: >
+        -optl-fuse-ld=bfd
       cabal-configure-extra-args: >
         --constraint="text==1.2.5.0"
       skip-benchmarks: true
@@ -50,6 +52,8 @@ jobs:
     secrets: inherit
     with:
       ghc: "9.4"
+      ghc-options: >
+        -optl-fuse-ld=bfd
       cabal-configure-extra-args: >
         --constraint="text==2.0.2"
       skip-benchmarks: true
