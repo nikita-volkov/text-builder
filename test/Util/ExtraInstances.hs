@@ -3,9 +3,9 @@
 module Util.ExtraInstances where
 
 import qualified Data.Text.Lazy.Builder as TextLazyBuilder
+import Prelude
 import Test.QuickCheck
 import Test.QuickCheck.Instances ()
-import Prelude
 
 instance Arbitrary TextLazyBuilder.Builder where
   arbitrary =

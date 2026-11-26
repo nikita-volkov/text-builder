@@ -3,12 +3,12 @@ module Util.TestTrees where
 import Data.List.NonEmpty (NonEmpty (..))
 import Data.Monoid
 import Data.Semigroup
+import Prelude
 import Test.QuickCheck
 import Test.QuickCheck.Classes
 import Test.QuickCheck.Instances ()
 import Test.Tasty
 import Test.Tasty.QuickCheck
-import Prelude
 
 -- | Tests mapping from @a@ to @b@ to produce a valid 'Monoid'.
 --
