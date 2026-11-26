@@ -10,6 +10,7 @@ import qualified Data.Text.Encoding as Text
 import Data.Word
 import Numeric
 import Numeric.Natural (Natural)
+import Prelude
 import Test.QuickCheck.Classes
 import Test.QuickCheck.Instances ()
 import Test.Tasty
@@ -17,7 +18,6 @@ import Test.Tasty.QuickCheck
 import TextBuilder
 import Util.ExtraInstances ()
 import Util.TestTrees
-import Prelude
 
 main :: IO ()
 main = (defaultMain . testGroup "All") tests

@@ -6,9 +6,9 @@ import qualified Data.Text.Builder.Linear
 import qualified Data.Text.Encoding as D
 import qualified Data.Text.Lazy as C
 import qualified Data.Text.Lazy.Builder as B
+import Prelude
 import Test.Tasty.Bench
 import qualified TextBuilder as A
-import Prelude
 
 main :: IO ()
 main =

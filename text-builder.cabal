@@ -1,6 +1,6 @@
 cabal-version: 3.0
 name: text-builder
-version: 1.0.0.5
+version: 1.0.0.6
 category: Text, Builders
 synopsis: Efficient and flexible strict text builder
 description:
@@ -125,11 +125,11 @@ test-suite test
     Util.TestTrees
 
   build-depends:
-    QuickCheck >=2.14 && <3,
     base >=4.11 && <5,
     bytestring >=0.10 && <0.13,
+    QuickCheck >=2.14 && <3,
     quickcheck-classes >=0.6.5 && <0.7,
-    quickcheck-instances >=0.3.32 && <0.4,
+    quickcheck-instances >=0.3.32 && <0.5,
     tasty >=1.5.3 && <2,
     tasty-quickcheck >=0.11.1 && <0.12,
     text >=1.2 && <3,
