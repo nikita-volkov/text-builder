@@ -34,26 +34,22 @@ jobs:
       test-options: >
         --quickcheck-tests 10_000
   
-  build-with-ghc-9-4-and-text-1-2:
+  build-with-latest-and-text-1-2:
     uses: nikita-volkov/haskell-hackage-lib-github-actions-workflows/.github/workflows/build.yaml@v4
     secrets: inherit
     with:
-      ghc: "9.4"
       cabal-configure-extra-args: >
         --constraint="text==1.2.5.0"
-        --hsc2hs-option=--lflag=-fuse-ld=bfd
       skip-benchmarks: true
       test-options: >
         --quickcheck-tests 10_000
   
-  build-with-ghc-9-4-and-text-2-0-2:
+  build-with-latest-and-text-2-0-2:
     uses: nikita-volkov/haskell-hackage-lib-github-actions-workflows/.github/workflows/build.yaml@v4
     secrets: inherit
     with:
-      ghc: "9.4"
       cabal-configure-extra-args: >
         --constraint="text==2.0.2"
-        --hsc2hs-option=--lflag=-fuse-ld=bfd
       skip-benchmarks: true
       test-options: >
         --quickcheck-tests 10_000
